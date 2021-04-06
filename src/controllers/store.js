@@ -237,7 +237,7 @@ module.exports = {
                     PRODUCTO_ID: i.PRODUCTO_ID,
                     DETALLE_NOMBREPRODUCTO: i.PRODUCTO_NOMBRE,
                     DETALLE_OFERTA: i.OFERTA_DESCRIPCION,
-                    DETALLE_CANTIDA: i.PRODUCTO_CANTIDAD,
+                    DETALLE_CANTIDAD: i.PRODUCTO_CANTIDAD,
                     DETALLE_PRECIOUNITARIO: i.PRECIO_UNITARIO,
                     DETALLE_PRECIOTOTAL: i.PRODUCTO_PRECIO,
                     DETALLE_PRODUCTOR: i.PERSONA_ID,

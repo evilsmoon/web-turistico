@@ -147,7 +147,7 @@ module.exports = {
 
                 .fontSize(10)
                 .font("Helvetica")
-                .text(i.DETALLE_CANTIDA, 125, invoiceTableBody)
+                .text(i.DETALLE_CANTIDAD, 125, invoiceTableBody)
 
                 .fontSize(10)
                 .font("Helvetica")
