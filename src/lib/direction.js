@@ -39,7 +39,7 @@ fetch('/direction')
             cantones = cantones.filter(o => hash[o.canton] ? false : hash[o.canton] = true);
             // console.log(JSON.stringify(cantones));
 
-            //creando los options de area
+            //creando los options de direccion
             var areasSelect = document.getElementById('provincia');
             var categoriasSelect = document.getElementById('canton');
             var subCategoriasSelect = document.getElementById('parroquia');
