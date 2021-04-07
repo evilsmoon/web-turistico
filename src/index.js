@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const MySQLStore = require('express-mysql-session')(session);
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
+require('dotenv').config();
 
 const { database } = require('./keys');//llamamos a keys el objeto database
 
@@ -16,7 +17,7 @@ const app = express();
 require('./lib/passport');//Llamamos al modulo passport, para la autenticacion
 
 // settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT);
 app.set('views', path.join(__dirname, 'views'));
 
 app.engine('.hbs', exphbs({//Configuramos el engine

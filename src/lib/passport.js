@@ -6,9 +6,9 @@ const pool = require('../database');//Llamamos a la base
 
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
-    cloud_name: 'drwpai0vu',
-    api_key: '942431336444345',
-    api_secret: '2F20lvuOg14-P-2zBCqBZsY8S20'
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 const fs = require('fs-extra');
