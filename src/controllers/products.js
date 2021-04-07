@@ -12,13 +12,21 @@ const fs = require('fs-extra');
 module.exports = {
 
     getAllProducts: async (req, res) => {
+        var admin = false;
+
         const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PERSONA_ID = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA )', [req.user.PERSONA_ID]);
 
         const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
 
         const people = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE DIRECCION.DIRECCION_ID = PERSONA.DIRECCION_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
+        const rolAdmin = people[0];
 
-        res.render('products/list', { products, offer, profile: people[0] });
+        if (rolAdmin.ROL_ID == 1) {
+            console.log('Entro user admin');
+            admin = true;
+        }
+
+        res.render('products/list', { products, offer, profile: people[0], admin });
     },
 
     createProductPage: async (req, res) => {
@@ -31,6 +39,9 @@ module.exports = {
 
     createProductPost: async (req, res) => {
         console.log(req.body);
+
+        var today = new Date();
+        const productDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
         const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID, PRODUCTO_NOMBRE, PRODUCTO_DESCRIPCION, OFERTA_DESCRIPCION, PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, PRODUCTO_FECHAPUBLICACION, PRODUCTO_FECHALIMITE, PRODUCTO_FECHACOCECHA, PRODUCTO_ESTADO, PRODUCTO_IMAGEN, PRODUCTO_URL } = req.body;
 
@@ -53,6 +64,10 @@ module.exports = {
         };
 
         newProduct.PRODUCTO_ESTADO = 'Verdadero';
+
+        if (!newProduct.PRODUCTO_FECHAPUBLICACION){
+            newProduct.PRODUCTO_FECHAPUBLICACION = productDate;
+        }
 
         try {
             if (req.file.path) {
@@ -190,7 +205,7 @@ module.exports = {
             console.log(newOfert);
             await pool.query('INSERT INTO OFERTA set ?', [newOfert]);
 
-        } 
+        }
         // else if (find.length > 0 && !OFERTA_DESCRIPCION) {
         //     console.log('Hacemos un delete');
         //     await pool.query('DELETE FROM oferta WHERE PRODUCTO_ID = ?', [producto_id]);

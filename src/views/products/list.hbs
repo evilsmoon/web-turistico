@@ -41,6 +41,15 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-12">
+                        {{#if admin}}
+                        <div class="col-md-4 mx-auto">
+                            <div class="card card-body text-center border-primary">
+                                <p>Ingresar al panel de Administrador</p>
+                                <a href="/administrator/users" class="btn btn-outline-primary">Ingresar</a>
+                            </div>
+                        </div>
+                        <div class="mb-3"></div>
+                        {{/if}}
                         <div class="row">
 
                             {{#if offer}}

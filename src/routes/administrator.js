@@ -5,7 +5,6 @@ const { isAdmin } = require('../lib/auth');
 
 const {
     getAllUsers,
-    getAllProducts,
     getSearchUsers,
     deleteUsers,
     editUserPost,
@@ -25,18 +24,16 @@ router.get('/users/search', isAdmin, getSearchUsers); //Buscar usuarios por su n
 router.post('/users/edit', isAdmin, editUserPost); //Modificar el estado del usario
 router.get('/delete/:id', isAdmin, deleteUsers); //Eliminamos usuarios por su ID
 
-router.get('/products', isAdmin, getAllProducts); //Obtenemos todos los productos caducados
-
 router.get('/category', isAdmin, getAllCategory); //Obtenemos todas los categorias
-router.post('/category', isAdmin, createCategoryPost); //
-router.post('/category/edit', isAdmin, editCategoryPost); //
+router.post('/category', isAdmin, createCategoryPost); //Agregamos nueva categoria
+router.post('/category/edit', isAdmin, editCategoryPost); //Editamos la categoria seleccionada
 
 router.get('/measurements', isAdmin, getAllMeasurements); //Obtenemos todas las unidades de medida
-router.post('/measurements', isAdmin, createMeasurementsPost); //
-router.post('/measurements/edit', isAdmin, editMeasurementsPost); //
+router.post('/measurements', isAdmin, createMeasurementsPost); //Agregamos nueva medida
+router.post('/measurements/edit', isAdmin, editMeasurementsPost); //Editamos la medida seleccionada
 
 router.get('/presentation', isAdmin, getAllPresentation); //Obtenemos todas las unidades de medida
-router.post('/presentation', isAdmin, createPresentationPost); //
-router.post('/presentation/edit', isAdmin, editPresentationPost); //
+router.post('/presentation', isAdmin, createPresentationPost); //Agremamos nueva presentacion
+router.post('/presentation/edit', isAdmin, editPresentationPost); //Editamos la presentacion seleccionada
 
 module.exports = router;

@@ -32,17 +32,12 @@ module.exports = {
         // res.redirect('/administrator/users');
     },
 
-    getAllProducts: async (req, res) => { //Obtenemos todos los productos caducados
-        const products = await pool.query('SELECT * FROM CATEGORIA, PRESENTACION, PRODUCTO, PERSONA, DIRECCION WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID');
-        res.render('administrator/products', { products });
-    },
-
-    getAllCategory: async (req, res) => {
+    getAllCategory: async (req, res) => { //Obtenemos todas los categorias
         const category = await pool.query('SELECT * FROM CATEGORIA');
         res.render('administrator/category', { category });
     },
 
-    createCategoryPost: async (req, res) => {
+    createCategoryPost: async (req, res) => { //Agregamos nueva categoria
         const { CATEGORIA_NOMBRE, CATEGORIA_DESCRIPCION } = req.body;
         const newCategory = {
             CATEGORIA_NOMBRE,
@@ -52,7 +47,7 @@ module.exports = {
         res.redirect('/administrator/category');
     },
 
-    editCategoryPost: async (req, res) => {
+    editCategoryPost: async (req, res) => { //Editamos la categoria seleccionada
         const { CATEGORIA_ID, CATEGORIA_NOMBRE, CATEGORIA_DESCRIPCION } = req.body;
         const newCategory = {
             CATEGORIA_NOMBRE,
@@ -62,35 +57,35 @@ module.exports = {
         res.redirect('/administrator/category');
     },
 
-    getAllMeasurements: async (req, res) => {
+    getAllMeasurements: async (req, res) => { //Obtenemos todas las unidades de medida
         const measure = await pool.query('SELECT * FROM MEDIDA');
         res.render('administrator/measurements', { measure });
     },
 
-    createMeasurementsPost: async (req, res) => {
+    createMeasurementsPost: async (req, res) => { //Agregamos nueva medida
         const { MEDIDA_NOMBRE } = req.body;
         await pool.query('INSERT INTO MEDIDA (MEDIDA_ID, MEDIDA_NOMBRE) VALUES (NULL, ?)', [MEDIDA_NOMBRE]);
         res.redirect('/administrator/measurements');
     },
 
-    editMeasurementsPost: async (req, res) => {
+    editMeasurementsPost: async (req, res) => { //Editamos la medida seleccionada
         const { MEDIDA_ID, MEDIDA_NOMBRE } = req.body;
         await pool.query('UPDATE MEDIDA set MEDIDA_NOMBRE = ? WHERE MEDIDA_ID = ?', [MEDIDA_NOMBRE, MEDIDA_ID]);
         res.redirect('/administrator/measurements');
     },
 
-    getAllPresentation: async (req, res) => {
+    getAllPresentation: async (req, res) => { //Obtenemos todas las unidades de medida
         const presentation = await pool.query('SELECT * FROM PRESENTACION');
         res.render('administrator/presentation', { presentation });
     },
 
-    createPresentationPost: async (req, res) => {
+    createPresentationPost: async (req, res) => { //Agremamos nueva presentacion
         const { PRESENTACION_NOMBRE } = req.body;
         await pool.query('INSERT INTO PRESENTACION (PRESENTACION_ID, PRESENTACION_NOMBRE) VALUES (NULL, ?)', [PRESENTACION_NOMBRE]);
         res.redirect('/administrator/presentation');
     },
 
-    editPresentationPost: async (req, res) => {
+    editPresentationPost: async (req, res) => { //Editamos la presentacion seleccionada
         console.log(req.body);
         const { PRESENTACION_ID, PRESENTACION_NOMBRE } = req.body;
         await pool.query('UPDATE PRESENTACION set PRESENTACION_NOMBRE = ? WHERE PRESENTACION_ID = ?', [PRESENTACION_NOMBRE, PRESENTACION_ID]);
