@@ -50,6 +50,11 @@ passport.use('local.signup', new LocalStrategy({
 }, async (req, PERSONA_EMAIL, PERSONA_CONTRASENA, done) => {
     console.log(req.body);
 
+    var today = new Date();
+    const loginDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    const loginHour = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+    const userLogin = loginDate + ' ' + loginHour;
+
     const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN, PERSONA_URL } = req.body;
     const rows = await pool.query('SELECT * FROM PERSONA WHERE PERSONA_EMAIL = ?', [PERSONA_EMAIL]);
 
@@ -70,6 +75,7 @@ passport.use('local.signup', new LocalStrategy({
         }
         newUser.ROL_ID = 2;
         newUser.PERSONA_ESTADO = 'Verdadero';
+        newUser.PERSONA_LOGIN = userLogin;
         
         try {
             if (req.file.path) {
