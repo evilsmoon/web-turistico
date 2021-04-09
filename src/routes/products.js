@@ -6,7 +6,12 @@ const router = Router();
 
 const { isLoggedIn } = require('../lib/auth');
 
-const {validate, createProductsValidation} = require('../lib/validation');
+const {
+    validate,
+    createProductsValidation,
+    editProductsValidation,
+    editUsersValidation
+} = require('../lib/validation');
 
 const {
     getAllProducts,
@@ -26,10 +31,10 @@ router.post('/add', isLoggedIn, validate(createProductsValidation), createProduc
 router.get('/delete/:producto_id', isLoggedIn, deleteProduct);
 router.get('/deleteoffer/:producto_id', isLoggedIn, deleteOffert);
 router.get('/edit/:producto_id', isLoggedIn, editProductPage);
-router.post('/edit/:producto_id', isLoggedIn, validate(createProductsValidation), editProductPost);
+router.post('/edit/:producto_id', isLoggedIn, validate(editProductsValidation), editProductPost);
 
 // Editar Persona
 router.get('/user', isLoggedIn, editPeoplePage);
-router.post('/user', isLoggedIn, editPeoplePost);
+router.post('/user', isLoggedIn, validate(editUsersValidation), editPeoplePost);
 
 module.exports = router;

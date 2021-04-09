@@ -69,22 +69,24 @@
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Peso Unitario:</label>
-                                                <input type="number" value="{{product.PRODUCTO_MEDIDA}}"
+                                                <input type="number" step="0.01" value="{{product.PRODUCTO_MEDIDA}}"
                                                     name="PRODUCTO_MEDIDA" class="form-control" placeholder="Peso" maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
                                                     required>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Cantidad:</label>
-                                                <input type="number" value="{{product.PRODUCTO_CANTIDAD}}"
-                                                    name="PRODUCTO_CANTIDAD" class="form-control" placeholder="Stock" maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                                <input type="text" value="{{product.PRODUCTO_CANTIDAD}}"
+                                                    name="PRODUCTO_CANTIDAD" class="form-control" placeholder="Stock" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
+                                                    maxlength="6" maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
                                                     required>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Precio Unitario:</label>
                                                 <input type="number" value="{{product.PRODUCTO_PRECIO}}"
-                                                    name="PRODUCTO_PRECIO" class="form-control" placeholder="Precio" maxlength="60" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                                    name="PRODUCTO_PRECIO" class="form-control" placeholder="Precio" 
+                                                    maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
                                                     required>
                                             </div>
 
