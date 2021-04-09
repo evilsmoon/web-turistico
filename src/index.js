@@ -55,11 +55,11 @@ const storage = multer.diskStorage({
 
 app.use(multer({
     storage,
-    fileFilter: (req, file, cb) => {    
+    fileFilter: (req, file, cb) => {
         if (file.size > 2000000) {//Tamaño maximo del archivo
-            cb("Peso maximo de la imagen es de 2 MB");
-        }else if (file.mimetype !== "image/png" && file.mimetype !== "image/jpg" && file.mimetype !== "image/jpeg") {
-            cb('Error: El archivo debe ser una imagen valida');
+            return cb(new Error('Peso maximo de la imagen es de 2 MB'));
+        } else if (file.mimetype !== "image/png" && file.mimetype !== "image/jpg" && file.mimetype !== "image/jpeg") {
+            return cb(new Error('El archivo debe ser una imagen valida'));
         } else {
             return cb(null, true);
         }
@@ -85,15 +85,27 @@ app.use('/detail', require('./routes/detail'));
 
 // Public
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static(path.join(__dirname, 'public/img/uploads')));
-//app.use(express.static(path.join(__dirname, 'public/img/uploads')));
 
-app.use((req, res, next) => {
-    res.status(404).send('Page Not Found(Pagina no encontrada) No puede ser');
+// app.use((req, res, next) => {
+//     res.status(404).send('Page Not Found(Pagina no encontrada) No puede ser');
+//     // res.status(404).render('/profile');
+// });
+
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
-app.use((req, res, next) => {
-    res.status(500).send('Something Broke!(Algo salio mal) hay no');
+// error handler
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 // Starting the server

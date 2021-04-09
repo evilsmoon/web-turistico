@@ -6,6 +6,8 @@ const router = Router();
 
 const { isLoggedIn } = require('../lib/auth');
 
+const {validate, createProductsValidation} = require('../lib/validation');
+
 const {
     getAllProducts,
     createProductPage,
@@ -18,14 +20,13 @@ const {
     editPeoplePost,
 } = require('../controllers/products');
 
-
-router.get('/add', isLoggedIn, createProductPage);
-router.post('/add', isLoggedIn, createProductPost);
 router.get('/', isLoggedIn, getAllProducts);
+router.get('/add', isLoggedIn, createProductPage);
+router.post('/add', isLoggedIn, validate(createProductsValidation), createProductPost);
 router.get('/delete/:producto_id', isLoggedIn, deleteProduct);
 router.get('/deleteoffer/:producto_id', isLoggedIn, deleteOffert);
 router.get('/edit/:producto_id', isLoggedIn, editProductPage);
-router.post('/edit/:producto_id', isLoggedIn, editProductPost);
+router.post('/edit/:producto_id', isLoggedIn, validate(createProductsValidation), editProductPost);
 
 // Editar Persona
 router.get('/user', isLoggedIn, editPeoplePage);

@@ -14,9 +14,9 @@ module.exports = {
     getAllProducts: async (req, res) => {
         var admin = false;
 
-        const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PERSONA_ID = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA )', [req.user.PERSONA_ID]);
+        const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "Verdadero" AND PERSONA_ID = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA )', [req.user.PERSONA_ID]);
 
-        const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
+        const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "Verdadero" AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
 
         const people = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE DIRECCION.DIRECCION_ID = PERSONA.DIRECCION_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
         const rolAdmin = people[0];
@@ -65,7 +65,7 @@ module.exports = {
 
         newProduct.PRODUCTO_ESTADO = 'Verdadero';
 
-        if (!newProduct.PRODUCTO_FECHAPUBLICACION){
+        if (!newProduct.PRODUCTO_FECHAPUBLICACION) {
             newProduct.PRODUCTO_FECHAPUBLICACION = productDate;
         }
 
@@ -88,10 +88,14 @@ module.exports = {
 
         await pool.query('INSERT INTO PRODUCTO set ?', [newProduct]);//await le dice a la funcion que esta peticion va a tomar su tiempo
 
+        console.log('OFERTA_DESCRIPCION: ' + OFERTA_DESCRIPCION);
+
         if (OFERTA_DESCRIPCION) {
+            console.log('id user: ' + req.user.PERSONA_ID);
             const row = await pool.query('SELECT MAX(PRODUCTO_ID) AS ID FROM PRODUCTO, PERSONA WHERE PRODUCTO.PERSONA_ID = PERSONA.PERSONA_ID AND PERSONA.PERSONA_ID = ?', [req.user.PERSONA_ID]);
             const lastId = row[0];
-            const lastProduct = lastId.id;
+            const lastProduct = lastId.ID;
+            console.log('id last product: ' + lastProduct);
             const newOfert = {
                 PRODUCTO_ID: lastProduct,
                 OFERTA_DESCRIPCION
@@ -106,13 +110,7 @@ module.exports = {
 
     deleteProduct: async (req, res) => {
         const { producto_id } = req.params;
-        const rows = await pool.query('SELECT * FROM PRODUCTO WHERE PRODUCTO_ID = ?', [producto_id]);
-        const products = rows[0];
-        if (products.PRODUCTO_IMAGEN !== 'product_iqxawz.jpg') {
-            await cloudinary.uploader.destroy(products.PRODUCTO_IMAGEN); //Eliminamos la imagen
-        }
-        await pool.query('DELETE FROM OFERTA WHERE PRODUCTO_ID = ?', [producto_id]);
-        await pool.query('DELETE FROM PRODUCTO WHERE PRODUCTO_ID = ?', [producto_id]);
+        await pool.query('UPDATE PRODUCTO SET PRODUCTO_ESTADO = "Falso" WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
         req.flash('success', 'Producto Eliminado');
         res.redirect('/products');//redireccionamos a la misma lista products
     },
@@ -126,21 +124,22 @@ module.exports = {
     },
 
     editProductPage: async (req, res) => {
+        console.log('Ingreso con exito');
         const { producto_id } = req.params;
 
-        const productsId = await pool.query('SELECT * FROM PRODUCTO WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
+        // const productsId = await pool.query('SELECT * FROM PRODUCTO WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
 
-        const products = await pool.query('SELECT * FROM PRODUCTO LEFT JOIN CATEGORIA ON PRODUCTO.CATEGORIA_ID = CATEGORIA.CATEGORIA_ID LEFT JOIN MEDIDA ON PRODUCTO.MEDIDA_ID = MEDIDA.MEDIDA_ID LEFT JOIN PRESENTACION ON PRODUCTO.PRESENTACION_ID = PRESENTACION.PRESENTACION_ID LEFT JOIN OFERTA ON PRODUCTO.PRODUCTO_ID = OFERTA.PRODUCTO_ID WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
+        // const products = await pool.query('SELECT * FROM PRODUCTO LEFT JOIN CATEGORIA ON PRODUCTO.CATEGORIA_ID = CATEGORIA.CATEGORIA_ID LEFT JOIN MEDIDA ON PRODUCTO.MEDIDA_ID = MEDIDA.MEDIDA_ID LEFT JOIN PRESENTACION ON PRODUCTO.PRESENTACION_ID = PRESENTACION.PRESENTACION_ID LEFT JOIN OFERTA ON PRODUCTO.PRODUCTO_ID = OFERTA.PRODUCTO_ID WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
 
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        // const category = await pool.query('SELECT * FROM CATEGORIA');
 
-        const listcategory = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA.CATEGORIA_ID NOT IN (SELECT CATEGORIA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        // const listcategory = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA.CATEGORIA_ID NOT IN (SELECT CATEGORIA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        const listpresentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION.PRESENTACION_ID NOT IN (SELECT PRESENTACION_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        // const listpresentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION.PRESENTACION_ID NOT IN (SELECT PRESENTACION_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        const listmeasure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA.MEDIDA_ID NOT IN (SELECT MEDIDA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        // const listmeasure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA.MEDIDA_ID NOT IN (SELECT MEDIDA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        res.render('products/edit', { product: products[0], productId: productsId[0], category, listcategory, listpresentation, listmeasure });
+        // res.render('products/edit', { product: products[0], productId: productsId[0], category, listcategory, listpresentation, listmeasure });
     },
 
     editProductPost: async (req, res) => {

@@ -22,14 +22,16 @@ module.exports = {
         console.log('PERSONA_ID: ' + PERSONA_ID);
         console.log('PERSONA_ESTADO: ' + PERSONA_ESTADO);
         await pool.query('UPDATE PERSONA SET PERSONA_ESTADO = ? WHERE PERSONA_ID = ?', [PERSONA_ESTADO, PERSONA_ID]);
+        req.flash('success', 'Usuario Modificado');
         res.redirect('/administrator/users');
     },
 
     deleteUsers: async (req, res) => { //Eliminamos usuarios por su ID
         const { id } = req.params;
         console.log('id usuario: ' + id);
-        // await pool.query('DELETE FROM persona WHERE PERSONA_ID = ?', [id]);
-        // res.redirect('/administrator/users');
+        await pool.query('UPDATE PERSONA SET PERSONA_ESTADO = "Falso" WHERE PERSONA_ID = ?', [id]);
+        req.flash('success', 'Usuario Eliminado');
+        res.redirect('/administrator/users');
     },
 
     getAllCategory: async (req, res) => { //Obtenemos todas los categorias
