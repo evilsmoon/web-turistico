@@ -18,6 +18,7 @@ module.exports = class Cart {
             productIDProductor = product.PERSONA_ID,
             productProductor = product.PERSONA_NOMBRE,
             productTelefono = product.PERSONA_TELEFONO,
+            productDireccion = product.DIRECCION_ID,
             productParroquia = product.PARROQUIA,
             productEmail = product.PERSONA_EMAIL;
 
@@ -59,6 +60,7 @@ module.exports = class Cart {
                 PERSONA_ID: productIDProductor,
                 PERSONA_NOMBRE: productProductor,
                 PERSONA_TELEFONO: productTelefono,
+                DIRECCION_ID: productDireccion,
                 DIRECCION: productParroquia,
                 PERSONA_EMAIL: productEmail
             });
