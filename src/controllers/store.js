@@ -133,7 +133,7 @@ module.exports = {
             req.flash('message', 'Primero Debe Iniciar Seción Para Comprar');
         }
 
-        res.redirect('/shop');
+        res.redirect('/cart');
     },
 
     getCart: async (req, res) => {
@@ -171,8 +171,9 @@ module.exports = {
 
     deleteCart: async (req, res) => {
         const idUser = req.user.PERSONA_ID;
-        Cart.deleteCart(idUser)
-        res.redirect('/');
+        Cart.deleteCart(idUser);
+        req.flash('message', 'Carrito vaciado correctamente');
+        res.redirect('/products');
     },
 
     buyCart: async (req, res) => {
@@ -259,11 +260,11 @@ module.exports = {
                 await pool.query('UPDATE PRODUCTO SET PRODUCTO_CANTIDAD = ? WHERE PRODUCTO.PRODUCTO_ID = ?', [stock, i.PRODUCTO_ID]);
             }
 
+            Cart.deleteCart(userId);
+
             req.flash('success', 'Compra exitosa, por favor revise su factura');
             res.redirect('/detail/buy');
         }
-
-
     },
 
     errorCart: async (req, res) => {

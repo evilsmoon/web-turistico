@@ -8,7 +8,7 @@ module.exports = class Cart {
             productId = idProduct.PRODUCTO_ID,
             productCategoria = product.CATEGORIA_NOMBRE,
             productPresentacion = product.PRESENTACION_NOMBRE,
-            productMedida = product. MEDIDA_NOMBRE,
+            productMedida = product.MEDIDA_NOMBRE,
             productNombre = product.PRODUCTO_NOMBRE,
             productDescripcion = product.PRODUCTO_DESCRIPCION,
             productCantidad = product.PRODUCTO_CANTIDAD,
@@ -102,10 +102,7 @@ module.exports = class Cart {
     }
 
     static deleteCart(userId) {
-        for (let i of cart) {
-            var isExisting = cart.findIndex(element => element.idUser == userId && element.PRODUCTO_ID == i.PRODUCTO_ID);
-            console.log('Indice: ' + isExisting);
-            // cart.splice(isExisting, 1);
-        }
+        while (cart.findIndex(e => e.idUser == userId) >= 0)
+            cart.splice(cart.findIndex(f => f.idUser == userId), 1);
     }
 }

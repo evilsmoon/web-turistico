@@ -8,8 +8,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">{{!-- me-auto (right) -- ms-auto (left) --}}
                 <form class="d-flex" action="/shop/search" method="GET">{{!-- cambio en la ruta --}}
-                    <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar"
-                        aria-label="Search" maxlength="50" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                    <input class="form-control me-2" type="search" name="buscar" id="search" placeholder="Buscar"
+                        aria-label="Search" maxlength="50"
+                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                     <button class="btn btn-outline-success " type="submit">Buscar</button>
                 </form>
                 <li class="nav-item">
@@ -46,7 +47,7 @@
                         <li><a class="dropdown-item" href="/detail/buy"><i class="fal fa-clipboard-list"> Compra</i></a>
                         </li>
                         <li><a class="dropdown-item" href="/detail/sell"><i class="fal fa-clipboard-list-check"></i>
-                                    Venta</i></a></li>
+                                Venta</i></a></li>
                     </ul>
                 </li>
 
@@ -68,3 +69,29 @@
         </div>
     </div>
 </nav>
+
+<script>
+
+    fetch('/searchname')
+        .then(res => res.json())
+        .then(data => {
+
+            var productnames = [];
+
+            const direction = '';
+
+            data.direction.forEach(names => {
+                productnames.push(names.PRODUCTO_NOMBRE);
+            });
+
+            for (let i of productnames) {
+                console.log('canton: ' + i.PRODUCTO_NOMBRE);
+            }
+
+            $("#search").autocomplete({
+                source: productnames
+            });
+
+        });
+
+</script>

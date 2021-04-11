@@ -8,14 +8,7 @@ const passport = require('passport');//Traemos la biblioteca de passport
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');//Lo ejecutamos en culquier ruta que queramos proteger
 const { validate, createUsersValidation } = require('../lib/validation');
 
-const pool = require('../database');
-
-router.get('/direction', async (req, res) => {
-    const direction = await pool.query('SELECT * FROM DIRECCION');
-    res.json({
-        direction
-    })
-});
+const Cart = require('../models/cart');
 
 // SIGNUP(Crear Cuenta)
 router.get('/signup', isNotLoggedIn, (req, res) => {//Renderisa el formulario
@@ -23,7 +16,7 @@ router.get('/signup', isNotLoggedIn, (req, res) => {//Renderisa el formulario
     res.render('auth/signup');//Renderisamos signup
 });
 
-router.post('/signup', isNotLoggedIn,validate(createUsersValidation), passport.authenticate('local.signup', {//Recive datos del formulario   
+router.post('/signup', isNotLoggedIn, validate(createUsersValidation), passport.authenticate('local.signup', {//Recive datos del formulario   
     // successRedirect: '/profile',//Redirecciona a profile si se autentico bien
     successRedirect: '/products',
     failureRedirect: '/signup',//Redirecciona a signup si no se autentico bien
@@ -43,6 +36,8 @@ router.post('/signin', isNotLoggedIn, passport.authenticate('local.signin', {
 }));
 
 router.get('/logout', isLoggedIn, (req, res) => {
+    const idUser = req.user.PERSONA_ID;
+    Cart.deleteCart(idUser);
     req.logOut();
     res.redirect('/')
 });
