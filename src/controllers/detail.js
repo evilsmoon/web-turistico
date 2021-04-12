@@ -143,7 +143,7 @@ module.exports = {
             doc
                 .fontSize(10)
                 .font("Helvetica")
-                .text(i.DETALLE_NOMBREPRODUCTO, 50, invoiceTableBody)
+                .text(i.PRODUCTO_NOMBRE, 50, invoiceTableBody)
 
                 .fontSize(10)
                 .font("Helvetica")
@@ -183,7 +183,7 @@ module.exports = {
         doc
             .fontSize(10)
             .font("Helvetica-Bold")
-            .text("Total:", 160, invoiceTableBody)
+            .text("Total:", 195, invoiceTableBody)
 
             .fontSize(10)
             .font("Helvetica")
@@ -191,7 +191,7 @@ module.exports = {
 
             .fontSize(10)
             .font("Helvetica-Bold")
-            .text("Tipo de pago:", 160, invoiceTableBody + 20)
+            .text("Tipo de pago:", 155, invoiceTableBody + 20)
 
             .fontSize(10)
             .font("Helvetica")
