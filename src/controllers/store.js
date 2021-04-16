@@ -128,12 +128,13 @@ module.exports = {
             if (req.user.PERSONA_ID) {
                 const idUser = req.user.PERSONA_ID;
                 Cart.save(productsId, addedProduct, idUser);
+                res.redirect('/cart');
             }
         } catch {
             req.flash('message', 'Primero Debe Iniciar Seción Para Comprar');
+            res.redirect('/signin');
         }
 
-        res.redirect('/cart');
     },
 
     getCart: async (req, res) => {
