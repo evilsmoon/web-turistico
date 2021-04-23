@@ -22,8 +22,11 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Nombre:</label>
                                                 <input type="text" value="{{product.PRODUCTO_NOMBRE}}"
-                                                    name="PRODUCTO_NOMBRE" class="form-control" placeholder="Nombre" maxlength="60" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                                    name="PRODUCTO_NOMBRE" class="form-control" placeholder="Nombre"
+                                                    maxlength="60"
+                                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required autofocus>
+                                                <font size=2 class="text-danger">Mínimo 3 caracteres</font>
                                             </div>
 
                                             <div class="col-md-4">
@@ -70,24 +73,32 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Peso Unitario:</label>
                                                 <input type="number" step="0.01" value="{{product.PRODUCTO_MEDIDA}}"
-                                                    name="PRODUCTO_MEDIDA" class="form-control" placeholder="Peso" maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                                    name="PRODUCTO_MEDIDA" class="form-control" placeholder="Peso"
+                                                    maxlength="6"
+                                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
+                                                <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Cantidad:</label>
                                                 <input type="text" value="{{product.PRODUCTO_CANTIDAD}}"
-                                                    name="PRODUCTO_CANTIDAD" class="form-control" placeholder="Stock" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
-                                                    maxlength="6" maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                                    name="PRODUCTO_CANTIDAD" class="form-control" placeholder="Stock"
+                                                    onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
+                                                    maxlength="6" maxlength="6"
+                                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
+                                                <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Precio Unitario:</label>
                                                 <input type="number" value="{{product.PRODUCTO_PRECIO}}"
-                                                    name="PRODUCTO_PRECIO" class="form-control" placeholder="Precio" 
-                                                    maxlength="6" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                                    name="PRODUCTO_PRECIO" class="form-control" placeholder="Precio"
+                                                    maxlength="6"
+                                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
+                                                <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
                                             <div class="col-md-3">
@@ -104,6 +115,7 @@
                                                 <textarea name="PRODUCTO_DESCRIPCION" rows="2" class="form-control"
                                                     placeholder="Description"
                                                     required>{{product.PRODUCTO_DESCRIPCION}}</textarea>
+                                                <font size=2 class="text-danger">Mínimo 10 caracteres</font>
                                             </div>
 
                                             <div class="col-md-6">
@@ -126,6 +138,7 @@
                                             <div class="col-md-6">
                                                 <input type="file" accept="image/*" name="SUBIR_IMAGEN"
                                                     class="form-control" onchange="loadFile(event)">
+                                                <font size=2 class="text-danger">Solo subir imagenes</font>
                                                 <p></p>
                                                 <img id="output" class="img-thumbnail" width="300px" />
                                             </div>

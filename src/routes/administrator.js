@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const pool = require('../database');
+
 const { isAdmin } = require('../lib/auth');
 
 const {
@@ -35,5 +37,12 @@ router.post('/measurements/edit', isAdmin, editMeasurementsPost); //Editamos la 
 router.get('/presentation', isAdmin, getAllPresentation); //Obtenemos todas las unidades de medida
 router.post('/presentation', isAdmin, createPresentationPost); //Agremamos nueva presentacion
 router.post('/presentation/edit', isAdmin, editPresentationPost); //Editamos la presentacion seleccionada
+
+router.get('/listusers', isAdmin, async (req, res) => {
+    const listusers = await pool.query('SELECT PERSONA_NOMBRE FROM PERSONA');
+    res.json({
+        listusers
+    })
+});
 
 module.exports = router;

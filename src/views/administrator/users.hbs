@@ -11,19 +11,20 @@
                             </div>
                             <div class="col-md-8 text-center">
                                 <form class="d-flex" action="/administrator/users/search" method="GET">
-                                    <input class="form-control me-2" type="search" name="buscar"
+                                    <input class="form-control me-2" type="search" name="buscar" id="search"
                                         placeholder="Buscar Usuario" aria-label="Search">
                                     <button class="btn btn-outline-success " type="submit">Buscar</button>
                                 </form>
                             </div>
                             <table class="table caption-top">
-                                <caption>Lista de Usuarios Inactivos</caption>
+                                <caption>Lista de Usuarios</caption>
                                 <thead class="text-center table-dark">
                                     <tr class="card-title text-uppercase">
                                         <td>Nombre</td>
                                         <td>Telefono</td>
                                         <td>Direccion</td>
                                         <td>Email</td>
+                                        <td>Rol</td>
                                         <td>Estado</td>
                                         <td>Acciones</td>
                                     </tr>
@@ -36,13 +37,15 @@
                                             <td>{{PERSONA_TELEFONO}}</td>
                                             <td>{{PARROQUIA}}</td>
                                             <td>{{PERSONA_EMAIL}}</td>
-                                            <td><input type="text" value="{{PERSONA_ESTADO}}" name="PERSONA_ESTADO"
-                                                    required></td>
+                                            <td>{{ROL_NOMBRE}}</td>
+                                            <td>{{PERSONA_ESTADO}}</td>
+                                            {{!-- <td><input type="text" value="{{PERSONA_ESTADO}}" name="PERSONA_ESTADO"
+                                                    required></td> --}}
                                             <td>
                                                 <a href="/administrator/delete/{{PERSONA_ID}}"
-                                                    class="btn btn-danger">Eliminar</a>
+                                                    class="btn btn-success">Administrator</a>
                                                 <input type="hidden" name="PERSONA_ID" value="{{PERSONA_ID}}">
-                                                <button type="submit" class="btn btn-primary">Modificar</button>
+                                                <button type="submit" class="btn btn-primary">Activar</button>
                                             </td>
                                         </form>
                                     </tr>
@@ -74,26 +77,44 @@
             </div>
 
             <div class="panel panel-default">
-                <div class="mb-3">
-                </div>
-
                 <div class="d-grid gap-3">
-                    <a href="/administrator/category" class="btn btn-outline-primary"><i class="fal fa-list">
+                    <a href="/administrator/category" class="btn btn-outline-success"><i class="fal fa-list">
                             Categorias</i></a>
                     <a href="/administrator/measurements" class="btn btn-outline-info"><i class="far fa-ruler"> Unidad
                             Medida</i></a>
+                    <a href="/administrator/presentation" class="btn btn-outline-primary"><i
+                            class="fal fa-sack"></i>Presentación</a>
                 </div>
-                <div class="mb-3">
-                </div>
-                {{!-- <form action="#" method="POST"> --}}
-                    <div class="d-grid gap-3">
-                        <button type="submit" class="btn btn-outline-danger"><i class="far fa-window-close"></i>
-                            Eliminar Todos los Usuarios</button>
-                    </div>
-                    {{!--
-                </form> --}}
             </div>
         </div>
 
     </div>
 </div>
+
+<script>
+
+    /*fetch('/administrator/listusers')
+        .then(res => res.json())
+        .then(data => {
+
+            var usersnames = [];
+
+            const direction = '';
+
+            data.direction.forEach(names => {
+                usersnames.push(names.PERSONA_NOMBRE);
+            });
+
+            for (let i of usersnames) {
+                console.log('canton: ' + i.PERSONA_NOMBRE);
+            }
+
+            let uniqUsers = Array.from(new Set(usersnames));
+
+            $("#search").autocomplete({
+                source: uniqUsers
+            });
+
+        });*/
+
+</script>

@@ -25,6 +25,7 @@
                                                     placeholder="Nombre" maxlength="60"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required autofocus>
+                                                <font size=2 class="text-danger">Mínimo 3 caracteres</font>
                                             </div>
 
                                             <div class="col-md-4">
@@ -74,6 +75,7 @@
                                                     class="form-control" placeholder="Peso" maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
+                                                <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
                                             <div class="col-md-4">
@@ -84,6 +86,7 @@
                                                     maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
+                                                <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
                                             <div class="col-md-4">
@@ -92,6 +95,7 @@
                                                     class="form-control" placeholder="Precio" maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
+                                                <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
                                             <div class="col-md-4">
@@ -99,14 +103,18 @@
                                                 <div class="form-label">
                                                     <input class="form-control" name="PRODUCTO_FECHACOCECHA" type="date"
                                                         id="validateTime" required>
+                                                    <font size=2 class="text-danger">La fecha de cocecha debe ser menor
+                                                        a la del día de hoy</font>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
-                                                <label class="form-label">Fecha Expiracion:</label>
+                                                <label class="form-label">Fecha de Expiración:</label>
                                                 <div class="form-label">
                                                     <input class="form-control" name="PRODUCTO_FECHALIMITE" type="date"
                                                         id="validateTime" required>
+                                                    <font size=2 class="text-danger">La fecha de expiración debe ser
+                                                        mayor a la del día de hoy</font>
                                                 </div>
                                             </div>
 
@@ -116,6 +124,7 @@
                                                     placeholder="Descripción" maxlength="200"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required></textarea>
+                                                <font size=2 class="text-danger">Mínimo 10 caracteres</font>
                                             </div>
 
                                             <div class="col-md-6">
@@ -128,6 +137,7 @@
                                             <div class="mb-3">
                                                 <input type="file" accept="image/*" name="SUBIR_IMAGEN"
                                                     class="form-control" onchange="loadFile(event)">
+                                                <font size=2 class="text-danger">Solo subir imagenes</font>
                                             </div>
                                             <div class="mb-3 text-center">
                                                 <img id="output" class="img-thumbnail" width="300px" />

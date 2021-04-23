@@ -3,14 +3,14 @@ const pool = require('../database');
 module.exports = {
 
     getAllUsers: async (req, res) => { //Obtenemos todos los usuarios inactivos
-        const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID');
+        const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID');
         res.render('administrator/users', { persona });
     },   
 
     getSearchUsers: async (req, res) => { //Buscar usuarios por su nombre
         const { buscar } = req.query;
         if (buscar) {
-            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA_NOMBRE =  ?', [buscar]);
+            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID AND PERSONA_NOMBRE =  ?', [buscar]);
             res.render('administrator/users', { persona });
         } else {
             res.render('administrator/users');

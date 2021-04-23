@@ -15,7 +15,7 @@ router.get('/direction', async (req, res) => {
 });
 
 router.get('/searchname', async (req, res) => {
-    const direction = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO');
+    const direction = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO WHERE PRODUCTO_ESTADO = "Verdadero"');
     res.json({
         direction
     })

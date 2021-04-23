@@ -15,21 +15,21 @@ function validate(validation) {
 function createUsersValidation(data) {
     const schema = yup.object().shape({
         PERSONA_NOMBRE: yup.string()
-            .min(10, 'Campo nombre minimo 10 caracteres')
+            .min(10, 'Campo nombre mínimo 10 caracteres')
             .matches(/^[a-zA-Z ]+$/, 'Campo nombre solo debe de tener letras')
             .required('Campo nombre requerido'),
 
         PERSONA_TELEFONO: yup.string()
-            .min(8, 'Campo telefono minimo 8 caracteres')
-            .matches(/^[0-9]+$/, 'Campo telefono solo debe de tener numeros')
+            .min(8, 'Campo telefono mínimo 8 caracteres')
+            .matches(/^[0-9]+$/, 'Campo telefono solo debe de tener números')
             .required('Campo telefono requerido'),
 
         PERSONA_EMAIL: yup.string()
-            .email('Correo electronico invalido')
+            .email('Correo electronico inválido')
             .required('Campo email requerido'),
 
         PERSONA_CONTRASENA: yup.string()
-            .min(6, 'Campo contraseña minimo 6 caracteres')
+            .min(8, 'Campo contraseña mínimo 8 caracteres')
             .required('Campo contraseña requerido'),
     });
 
@@ -45,13 +45,13 @@ function createUsersValidation(data) {
 function editUsersValidation(data) {
     const schema = yup.object().shape({
         PERSONA_NOMBRE: yup.string()
-            .min(10, 'Campo nombre minimo 10 caracteres')
+            .min(10, 'Campo nombre mínimo 10 caracteres')
             .matches(/^[a-zA-Z ]+$/, 'Campo nombre solo debe de tener letras')
             .required('Campo nombre requerido'),
 
         PERSONA_TELEFONO: yup.string()
-            .min(8, 'Campo telefono minimo 8 caracteres')
-            .matches(/^[0-9]+$/, 'Campo telefono solo debe de tener numeros')
+            .min(8, 'Campo telefono mínimo 8 caracteres')
+            .matches(/^[0-9]+$/, 'Campo telefono solo debe de tener números')
             .required('Campo telefono requerido'),
 
     });
@@ -63,27 +63,27 @@ function editUsersValidation(data) {
 function createProductsValidation(data) {
     const schema = yup.object().shape({
         PRODUCTO_NOMBRE: yup.string()
-            .min(4, 'Campo nombre minimo 4 caracteres')
+            .min(3, 'Campo nombre mínimo 3 caracteres')
             .matches(/^[a-zA-Z ]+$/, 'Campo nombre solo debe de tener letras')
             .required('Campo nombre requerido'),
 
         PRODUCTO_CANTIDAD: yup.string()
-            .min(1, 'Campo cantidad minimo 1 valor')
-            .matches(/^[0-9]+$/, 'Campo cantidad solo debe de tener numeros')
+            .min(1, 'Campo cantidad mínimo 1 valor')
+            .matches(/^[0-9]+$/, 'Campo cantidad solo debe de tener números')
             .required('Campo cantidad requerido'),
 
         PRODUCTO_PRECIO: yup.string()
-            .min(1, 'Campo precio minimo 1 valor')
-            .matches(/^\d+(?:.\d+)?$/, 'Campo precio solo debe de tener numeros')
+            .min(1, 'Campo precio mínimo 1 valor')
+            .matches(/^\d+(?:.\d+)?$/, 'Campo precio solo debe de tener números')
             .required('Campo precio requerido'),
 
         PRODUCTO_MEDIDA: yup.string()
-            .min(1, 'Campo medida minimo 1 valor')
-            .matches(/^\d+(?:.\d+)?$/, 'Campo peso solo debe de tener numeros')
+            .min(1, 'Campo medida mínimo 1 valor')
+            .matches(/^\d+(?:.\d+)?$/, 'Campo peso solo debe de tener números')
             .required('Campo peso requerido'),
 
         PRODUCTO_DESCRIPCION: yup.string()
-            .min(10, 'Campo descripción debe tener minimo 10 caracteres')
+            .min(10, 'Campo descripción debe tener mínimo 10 caracteres')
             .required('Campo contraseña requerido'),
 
         PRODUCTO_FECHACOCECHA: yup.date()
@@ -116,27 +116,27 @@ function createProductsValidation(data) {
 function editProductsValidation(data) {
     const schema = yup.object().shape({
         PRODUCTO_NOMBRE: yup.string()
-            .min(4, 'Campo nombre minimo 4 caracteres')
+            .min(4, 'Campo nombre mínimo 4 caracteres')
             .matches(/^[a-zA-Z ]+$/, 'Campo nombre solo debe de tener letras')
             .required('Campo nombre requerido'),
 
         PRODUCTO_CANTIDAD: yup.string()
-            .min(1, 'Campo cantidad minimo 1 valor')
-            .matches(/^[0-9]+$/, 'Campo cantidad solo debe de tener numeros')
+            .min(1, 'Campo cantidad mínimo 1 valor')
+            .matches(/^[0-9]+$/, 'Campo cantidad solo debe de tener números')
             .required('Campo cantidad requerido'),
 
         PRODUCTO_PRECIO: yup.string()
-            .min(1, 'Campo precio minimo 1 valor')
-            .matches(/^\d+(?:.\d+)?$/, 'Campo precio solo debe de tener numeros')
+            .min(1, 'Campo precio mínimo 1 valor')
+            .matches(/^\d+(?:.\d+)?$/, 'Campo precio solo debe de tener números')
             .required('Campo precio requerido'),
 
         PRODUCTO_MEDIDA: yup.string()
-            .min(1, 'Campo medida minimo 1 valor')
-            .matches(/^\d+(?:.\d+)?$/, 'Campo peso solo debe de tener numeros')
+            .min(1, 'Campo medida mínimo 1 valor')
+            .matches(/^\d+(?:.\d+)?$/, 'Campo peso solo debe de tener números')
             .required('Campo peso requerido'),
 
         PRODUCTO_DESCRIPCION: yup.string()
-            .min(10, 'Campo descripción debe tener minimo 10 caracteres')
+            .min(10, 'Campo descripción debe tener mínimo 10 caracteres')
             .required('Campo contraseña requerido'),
             
     });

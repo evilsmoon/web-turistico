@@ -17,21 +17,36 @@
 
                         <div class="col-md-8">
                             <label class="form-label">Nombre:</label>
-                            <input type="text" name="PERSONA_NOMBRE" placeholder="Nombre" class="form-control" maxlength="60" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required autofocus>
+                            <input type="text" name="PERSONA_NOMBRE" placeholder="Nombre" class="form-control"
+                                maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required autofocus>
+                            <font size=2 class="text-danger">Mínimo 10 caracteres</font>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Telefono:</label>
-                            <input type="number" name="PERSONA_TELEFONO" placeholder="Telefono" class="form-control" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 " maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            <input type="number" name="PERSONA_TELEFONO" placeholder="Telefono" class="form-control"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
+                                maxlength="10"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 required>
+                            <font size=2 class="text-danger">Mínimo 8 números</font>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Correo:</label>
-                            <input type="email" name="PERSONA_EMAIL" class="form-control" placeholder="Correo" maxlength="60" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required>
+                            <input type="email" name="PERSONA_EMAIL" class="form-control" placeholder="Correo"
+                                maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required>
+                                <font size=2 class="text-danger">Solo correos válidos</font>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Contraseña:</label>
-                            <input type="password" name="PERSONA_CONTRASENA" placeholder="Contraseña" class="form-control" maxlength="60" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            <input type="password" name="PERSONA_CONTRASENA" placeholder="Contraseña"
+                                class="form-control" maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 required>
+                            <font size=2 class="text-danger">Mínimo 8 caracteres</font>
                         </div>
 
                         <div class="col-md-4">
@@ -64,6 +79,7 @@
                             <label class="form-label">Imagen:</label>
                             <input type="file" accept="image/*" name="SUBIR_IMAGEN" class="form-control"
                                 onchange="loadFile(event)">
+                                <font size=2 class="text-danger">Solo subir imagenes</font>
                         </div>
 
                         <div class="col-12 text-center">
