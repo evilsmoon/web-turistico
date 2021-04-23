@@ -131,7 +131,7 @@ module.exports = {
                 res.redirect('/cart');
             }
         } catch {
-            req.flash('message', 'Primero Debe Iniciar Seción Para Comprar');
+            req.flash('message', 'Primero Debe Iniciar Sesión Para Comprar');
             res.redirect('/signin');
         }
 
