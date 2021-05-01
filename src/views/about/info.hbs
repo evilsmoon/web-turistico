@@ -1,86 +1,22 @@
 <div class="container p-4">
-    <div class="card border-primary mb-3">
-        <div class="row g-0">
-            <div class="col-md-4">
-                 <img class="d-flex align-self-center mr-3" src="/img/association/img1.jpg" alt="card-img-top"
-                    width="400px">
-            </div>
-            <div class="col-md-8">
+    <div class="row">
+        {{#each information}}
+        <div class="col-md-6">
+            <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                    <a href="{{INFORMACION_URL}}" target="_blank">
+                        <img src="{{INFORMACION_URL}}" class="card-img-top text-center" alt="Card image cap">
+                    </a>
+                    <p class="m-2">{{INFORMACION_DESCRIPCION}}</p>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="card border-primary mb-3">
-        <div class="row g-0"> 
-            <div class="col-md-4">
-                 <img class="d-flex align-self-center mr-3" src="/img/association/img2.jpg" alt="card-img-top"
-                    width="400px">
-            </div>           
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                </div>
-            </div>            
-        </div>
-    </div>
-    <div class="card border-primary mb-3">
-        <div class="row g-0">
-            <div class="col-md-4">
-                 <img class="d-flex align-self-center mr-3" src="/img/association/img3.jpg" alt="card-img-top"
-                    width="400px">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>Disculpe las molestias, por el momento no existe información relacionada con la pagina</p>
             </div>
         </div>
-    </div>
-    <div class="card border-primary mb-3">
-        <div class="row g-0"> 
-            <div class="col-md-4">
-                 <img class="d-flex align-self-center mr-3" src="/img/association/img4.jpg" alt="card-img-top"
-                    width="400px">
-            </div>           
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                </div>
-            </div>            
-        </div>
-    </div>
-    <div class="card border-primary mb-3">
-        <div class="row g-0">
-            <div class="col-md-4">
-                 <img class="d-flex align-self-center mr-3" src="/img/association/img5.jpg" alt="card-img-top"
-                    width="400px">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card border-primary mb-3">
-        <div class="row g-0"> 
-            <div class="col-md-4">
-                 <img class="d-flex align-self-center mr-3" src="/img/association/img6.jpg" alt="card-img-top"
-                    width="400px">
-            </div>           
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                </div>
-            </div>            
-        </div>
+        {{/each}}
     </div>
 </div>

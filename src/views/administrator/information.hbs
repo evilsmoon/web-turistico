@@ -2,25 +2,30 @@
     <div class="row">
 
         <div class="col-md-7">
-            <div class="thumbnail row text-center">
+            <div class="thumbnail row">
                 <table class="table caption-top">
                     <caption>Lista de Unidades de Medida</caption>
                     <thead class="text-center table-secondary">
                         <tr class="card-title text-uppercase">
                             <td>N°</td>
-                            <td>Nombre</td>
                             <td>Descripcion</td>
+                            <td>Imagen</td>
                             <td>Eliminar</td>
                         </tr>
                     </thead>
-                    <tbody class="text-center">
-                        {{#each category}}
+                    <tbody>
+                        {{#each information}}
                         <tr>
-                            <td>{{CATEGORIA_ID}}</td>
-                            <td>{{CATEGORIA_NOMBRE}}</td>
-                            <td>{{CATEGORIA_DESCRIPCION}}</td>
+                            <td>{{INFORMACION_ID}}</td>
+                            <td>{{INFORMACION_DESCRIPCION}}</td>
                             <td>
-                                <a href="/administrator/category/{{CATEGORIA_ID}}" class="btn btn-danger">Eliminar</a>
+                                <a href="{{INFORMACION_URL}}" target="_blank">
+                                    <img class="card-img-top" src="{{INFORMACION_URL}}" width="90px" height="150px">
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/administrator/information/{{INFORMACION_ID}}"
+                                    class="btn btn-danger">Eliminar</a>
                             </td>
                         </tr>
                         {{/each}}
@@ -31,21 +36,23 @@
         <div class="col-md-3">
             <div class="card border-dark mb-3">
                 <div class="card-header text-center card-title">
-                    <h5>Agregar Categoria</h5>
+                    <h5>Agregar Información</h5>
                 </div>
                 <div class="card-body text-dark">
-                    <form action="/administrator/category" method="POST" class="row g-3 needs-validation"
+                    <form action="/administrator/information" method="POST" class="row g-3 needs-validation"
                         enctype="multipart/form-data">
                         <p>
-                            <label class="form-label">Nombre:</label>
-                            <input type="text" name="CATEGORIA_NOMBRE" class="form-control" placeholder="Nombre"
-                                required autofocus>
-                        </p>
-
-                        <p>
                             <label class="form-label">Descripción:</label>
-                            <textarea name="CATEGORIA_DESCRIPCION" rows="2" class="form-control"
+                            <textarea name="INFORMACION_DESCRIPCION" rows="2" class="form-control"
                                 placeholder="Descripción" required></textarea>
+                        </p>
+                        <p>
+                            <input type="file" accept="image/*" name="SUBIR_IMAGEN" class="form-control"
+                                onchange="loadFile(event)">
+                            <font size=2 class="text-danger">Solo subir imagenes</font>
+                        <div class="mb-3 text-center">
+                            <img id="output" class="img-thumbnail" width="300px" />
+                        </div>
                         </p>
 
                         <div class="text-center">
@@ -73,8 +80,8 @@
                         <a href="/administrator/measurements" class="btn btn-outline-secondary">
                             <i class="far fa-ruler"> Unidad de Medida</i>
                         </a>
-                        <a href="/administrator/information" class="btn btn-outline-warning">
-                            <i class="fal fa-info-circle"> Información</i>
+                        <a href="/administrator/category" class="btn btn-outline-warning">
+                            <i class="fal fa-list"> Categoria</i>
                         </a>
                     </div>
                 </div>
@@ -83,3 +90,14 @@
 
     </div>
 </div>
+
+<script>
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+</script>

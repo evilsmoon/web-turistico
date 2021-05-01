@@ -5,7 +5,7 @@ module.exports = {
 
     getAllProducts: async (req, res) => {
 
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
 
         try {
             const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "Verdadero" AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA) AND PERSONA.PERSONA_ID NOT IN ( ? )', [req.user.PERSONA_ID]);
@@ -19,7 +19,7 @@ module.exports = {
     getSearchProducts: async (req, res) => {
         const { buscar } = req.query;
 
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
 
         try {
             if (buscar) {
@@ -47,7 +47,7 @@ module.exports = {
     getPlaceProducts: async (req, res) => {
         const { DIRECCION_ID } = req.query;
 
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
 
         try {
             if (DIRECCION_ID !== '0') {
@@ -77,7 +77,7 @@ module.exports = {
         const { CATEGORIA_ID } = req.query;
         console.log('CATEGORIA_ID: ' + CATEGORIA_ID);
 
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
 
         try {
             if (CATEGORIA_ID) {
@@ -103,7 +103,7 @@ module.exports = {
     },
 
     getOfferProducts: async (req, res) => {
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
 
         try {
             const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "Verdadero" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PERSONA.PERSONA_ID NOT IN ( ? )', [req.user.PERSONA_ID]);

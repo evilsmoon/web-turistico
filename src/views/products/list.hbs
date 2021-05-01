@@ -27,6 +27,9 @@
                     </div>
                     <div class="d-grid gap-3">
                         <a href="/products/user" class="btn btn-outline-primary">Actualizar</a>
+                        {{#if admin}}
+                        <a href="/administrator/users" class="btn btn-outline-secondary">Administrar</a>
+                        {{/if}}
                         <a href="/shop" class="btn btn-outline-success"><i class="fal fa-cart-arrow-down">Comprar</i>
                         </a>
                         <a href="/products/add" class="btn btn-outline-warning"><i
@@ -40,16 +43,7 @@
         <div class="col-xs-12 col-md-10 col-md-push-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="col-md-12">
-                        {{#if admin}}
-                        <div class="col-md-4 mx-auto">
-                            <div class="card card-body text-center border-primary">
-                                <p>Ingresar al panel de Administrador</p>
-                                <a href="/administrator/users" class="btn btn-outline-primary">Ingresar</a>
-                            </div>
-                        </div>
-                        <div class="mb-3"></div>
-                        {{/if}}
+                    <div class="col-md-12">                        
                         <div class="row">
 
                             {{#if offer}}
@@ -59,7 +53,7 @@
 
                             {{#each offer}}
                             <div class="col-md-3">
-                                <div class="card mb-4 shadow-sm">
+                                <div class="card mb-3 shadow-sm">
                                     <div class="card">
                                         <div class="card-body">
                                             <img class="card-img-top" src="{{PRODUCTO_URL}}" width="90px"
@@ -68,14 +62,15 @@
                                             <p class="card-text">Descripcion:</p>
                                             <p><textarea rows="2" class="form-control"
                                                     readonly>{{PRODUCTO_DESCRIPCION}}</textarea></p>
+                                            <p class="card-text">Oferta:</p>
                                             <p><textarea rows="2" class="form-control"
                                                     readonly>{{OFERTA_DESCRIPCION}}</textarea></p>
                                             <p class="card-text">Categoria: {{CATEGORIA_NOMBRE}}</p>
                                             <p class="card-text">Presentacion: {{PRESENTACION_NOMBRE}}</p>
                                             <p class="card-text">Cantidad: {{PRODUCTO_CANTIDAD}}</p>
                                             <p class="card-text">Precio: {{PRODUCTO_PRECIO}}</p>
-                                            <p class="card-text">Medida: {{MEDIDA_NOMBRE}}</p>
-                                            <p class="card-text">Peso: {{PRODUCTO_MEDIDA}}</p>
+                                            <p class="card-text">Peso: {{PRODUCTO_MEDIDA}} - Medida: {{MEDIDA_NOMBRE}}
+                                            </p>
                                             <div class="d-grid gap-3">
                                                 <a href="/products/edit/{{PRODUCTO_ID}}"
                                                     class="btn btn-primary rounded-pill">Actualizar</a>
@@ -98,7 +93,7 @@
 
                             {{#each products}}
                             <div class="col-md-3">
-                                <div class="card mb-4 shadow-sm">
+                                <div class="card mb-3 shadow-sm">
                                     <div class="card">
                                         <div class="card-body">
                                             <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px"
@@ -111,8 +106,8 @@
                                             <p class="card-text">Presentacion: {{PRESENTACION_NOMBRE}}</p>
                                             <p class="card-text">Cantidad: {{PRODUCTO_CANTIDAD}}</p>
                                             <p class="card-text">Precio: {{PRODUCTO_PRECIO}}</p>
-                                            <p class="card-text">Medida: {{MEDIDA_NOMBRE}}</p>
-                                            <p class="card-text">Peso: {{PRODUCTO_MEDIDA}}</p>
+                                            <p class="card-text">Peso: {{PRODUCTO_MEDIDA}} - Medida: {{MEDIDA_NOMBRE}}
+                                            </p>
                                             <div class="d-grid gap-3">
                                                 <a href="/products/edit/{{PRODUCTO_ID}}"
                                                     class="btn btn-primary rounded-pill">Actualizar</a>

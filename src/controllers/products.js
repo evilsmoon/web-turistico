@@ -30,9 +30,9 @@ module.exports = {
     },
 
     createProductPage: async (req, res) => {
-        const category = await pool.query('SELECT * FROM CATEGORIA');
-        const presentation = await pool.query('SELECT * FROM PRESENTACION');
-        const measure = await pool.query('SELECT * FROM MEDIDA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
+        const presentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "Verdadero"');
+        const measure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "Verdadero"');
 
         res.render('products/add', { category, presentation, measure });
     },
@@ -130,13 +130,13 @@ module.exports = {
 
         const products = await pool.query('SELECT * FROM PRODUCTO LEFT JOIN CATEGORIA ON PRODUCTO.CATEGORIA_ID = CATEGORIA.CATEGORIA_ID LEFT JOIN MEDIDA ON PRODUCTO.MEDIDA_ID = MEDIDA.MEDIDA_ID LEFT JOIN PRESENTACION ON PRODUCTO.PRESENTACION_ID = PRESENTACION.PRESENTACION_ID LEFT JOIN OFERTA ON PRODUCTO.PRODUCTO_ID = OFERTA.PRODUCTO_ID WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
 
-        const category = await pool.query('SELECT * FROM CATEGORIA');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
 
-        const listcategory = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA.CATEGORIA_ID NOT IN (SELECT CATEGORIA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        const listcategory = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero" AND CATEGORIA.CATEGORIA_ID NOT IN (SELECT CATEGORIA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        const listpresentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION.PRESENTACION_ID NOT IN (SELECT PRESENTACION_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        const listpresentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "Verdadero" AND PRESENTACION.PRESENTACION_ID NOT IN (SELECT PRESENTACION_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        const listmeasure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA.MEDIDA_ID NOT IN (SELECT MEDIDA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        const listmeasure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "Verdadero" AND MEDIDA.MEDIDA_ID NOT IN (SELECT MEDIDA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
         res.render('products/edit', { product: products[0], productId: productsId[0], category, listcategory, listpresentation, listmeasure });
     },

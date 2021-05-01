@@ -42,6 +42,20 @@ function createUsersValidation(data) {
     }
 }
 
+function loginValidation(data) {
+    const schema = yup.object().shape({
+        email: yup.string()
+            .email('Correo electronico inválido')
+            .required('Campo email requerido'),
+
+            password: yup.string()
+            .min(8, 'Campo contraseña mínimo 8 caracteres')
+            .required('Campo contraseña requerido'),
+    });
+
+    schema.validateSync(data);
+}
+
 function editUsersValidation(data) {
     const schema = yup.object().shape({
         PERSONA_NOMBRE: yup.string()
@@ -97,7 +111,19 @@ function createProductsValidation(data) {
 
     schema.validateSync(data);
 
-    const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID } = data;
+    const { PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID } = data;
+
+    if (Number(PRODUCTO_CANTIDAD) <= 0) {
+        throw new Error('Campo cantidad debe ser mayor a 0');
+    }
+
+    if (Number(PRODUCTO_PRECIO) <= 0) {
+        throw new Error('Campo precio debe ser mayor a 0');
+    }
+
+    if (Number(PRODUCTO_MEDIDA) <= 0) {
+        throw new Error('Campo medida debe ser mayor a 0');
+    }
 
     if (Number(CATEGORIA_ID) <= 0) {
         throw new Error('Error en el campo categoria');
@@ -138,12 +164,24 @@ function editProductsValidation(data) {
         PRODUCTO_DESCRIPCION: yup.string()
             .min(10, 'Campo descripción debe tener mínimo 10 caracteres')
             .required('Campo contraseña requerido'),
-            
+
     });
 
     schema.validateSync(data);
 
-    const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID } = data;
+    const { PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID } = data;
+
+    if (Number(PRODUCTO_CANTIDAD) <= 0) {
+        throw new Error('Campo cantidad debe ser mayor a 0');
+    }
+
+    if (Number(PRODUCTO_PRECIO) <= 0) {
+        throw new Error('Campo precio debe ser mayor a 0');
+    }
+
+    if (Number(PRODUCTO_MEDIDA) <= 0) {
+        throw new Error('Campo medida debe ser mayor a 0');
+    }
 
     if (Number(CATEGORIA_ID) <= 0) {
         throw new Error('Error en el campo categoria');
@@ -162,6 +200,7 @@ function editProductsValidation(data) {
 module.exports = {
     validate,
     createUsersValidation,
+    loginValidation,
     editUsersValidation,
     createProductsValidation,
     editProductsValidation

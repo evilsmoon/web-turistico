@@ -9,22 +9,18 @@
                         <tr class="card-title text-uppercase">
                             <td>N°</td>
                             <td>Nombre</td>
-                            <td>Modificar</td>
+                            <td>Eliminar</td>
                         </tr>
                     </thead>
                     <tbody class="text-center">
                         {{#each presentation}}
                         <tr>
-                            <form action="/administrator/presentation/edit" method="POST">
-                                <td>{{PRESENTACION_ID}}</td>
-                                <td>
-                                    <input type="text" value="{{PRESENTACION_NOMBRE}}" name="PRESENTACION_NOMBRE" required>
-                                </td>
-                                <td>
-                                    <input type="hidden" name="PRESENTACION_ID" value="{{PRESENTACION_ID}}">
-                                    <button type="submit" class="btn btn-primary">Modificar</button>
-                                </td>
-                            </form>
+                            <td>{{PRESENTACION_ID}}</td>
+                            <td>{{PRESENTACION_NOMBRE}}</td>
+                            <td>
+                                <a href="/administrator/presentation/{{PRESENTACION_ID}}"
+                                    class="btn btn-danger">Eliminar</a>
+                            </td>
                         </tr>
                         {{/each}}
                     </tbody>
@@ -61,14 +57,18 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="d-grid gap-3">
-                        <a href="/administrator/users" class="btn btn-outline-success"><i
-                                class="fal fa-user">Usuarios</i>
+                        <a href="/administrator/users" class="btn btn-outline-success">
+                            <i class="fal fa-user">Usuarios</i>
                         </a>
-                        <a href="/administrator/measurements" class="btn btn-outline-primary"><i class="far fa-ruler">
-                                Unidad
-                                Medida</i></a>
-                        <a href="/administrator/category" class="btn btn-outline-secondary"><i class="fal fa-list">
-                                Categoria</i></a>
+                        <a href="/administrator/measurements" class="btn btn-outline-primary">
+                            <i class="far fa-ruler"> Unidad de Medida</i>
+                        </a>
+                        <a href="/administrator/category" class="btn btn-outline-secondary">
+                            <i class="fal fa-list"> Categoria</i>
+                        </a>
+                        <a href="/administrator/information" class="btn btn-outline-warning">
+                            <i class="fal fa-info-circle"> Información</i>
+                        </a>
                     </div>
                 </div>
             </div>

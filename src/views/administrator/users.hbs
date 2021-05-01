@@ -24,7 +24,6 @@
                                         <td>Telefono</td>
                                         <td>Direccion</td>
                                         <td>Email</td>
-                                        <td>Rol</td>
                                         <td>Estado</td>
                                         <td>Acciones</td>
                                     </tr>
@@ -32,22 +31,15 @@
                                 <tbody class="text-center">
                                     {{#each persona}}
                                     <tr>
-                                        <form action="/administrator/users/edit" method="POST">
-                                            <td>{{PERSONA_NOMBRE}}</td>
-                                            <td>{{PERSONA_TELEFONO}}</td>
-                                            <td>{{PARROQUIA}}</td>
-                                            <td>{{PERSONA_EMAIL}}</td>
-                                            <td>{{ROL_NOMBRE}}</td>
-                                            <td>{{PERSONA_ESTADO}}</td>
-                                            {{!-- <td><input type="text" value="{{PERSONA_ESTADO}}" name="PERSONA_ESTADO"
-                                                    required></td> --}}
-                                            <td>
-                                                <a href="/administrator/delete/{{PERSONA_ID}}"
-                                                    class="btn btn-success">Administrator</a>
-                                                <input type="hidden" name="PERSONA_ID" value="{{PERSONA_ID}}">
-                                                <button type="submit" class="btn btn-primary">Activar</button>
-                                            </td>
-                                        </form>
+                                        <td>{{PERSONA_NOMBRE}}</td>
+                                        <td>{{PERSONA_TELEFONO}}</td>
+                                        <td>{{PARROQUIA}}</td>
+                                        <td>{{PERSONA_EMAIL}}</td>
+                                        <td>{{PERSONA_ESTADO}}</td>
+                                        <td>
+                                            <a href="/administrator/active/{{PERSONA_ID}}"
+                                                class="btn btn-success">Activar</a>
+                                        </td>
                                     </tr>
                                     {{/each}}
                                 </tbody>
@@ -78,12 +70,18 @@
 
             <div class="panel panel-default">
                 <div class="d-grid gap-3">
-                    <a href="/administrator/category" class="btn btn-outline-success"><i class="fal fa-list">
-                            Categorias</i></a>
-                    <a href="/administrator/measurements" class="btn btn-outline-info"><i class="far fa-ruler"> Unidad
-                            Medida</i></a>
-                    <a href="/administrator/presentation" class="btn btn-outline-primary"><i
-                            class="fal fa-sack"></i>Presentación</a>
+                    <a href="/administrator/category" class="btn btn-outline-success">
+                        <i class="fal fa-list"> Categorias</i>
+                    </a>
+                    <a href="/administrator/measurements" class="btn btn-outline-info">
+                        <i class="far fa-ruler"> Unidad de Medida</i>
+                    </a>
+                    <a href="/administrator/presentation" class="btn btn-outline-primary">
+                        <i class="fal fa-sack"> Presentación</i>
+                    </a>
+                    <a href="/administrator/information" class="btn btn-outline-warning">
+                        <i class="fal fa-info-circle"> Información</i>
+                    </a>
                 </div>
             </div>
         </div>

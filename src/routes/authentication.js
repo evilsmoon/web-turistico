@@ -6,7 +6,7 @@ const router = Router();
 
 const passport = require('passport');//Traemos la biblioteca de passport
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');//Lo ejecutamos en culquier ruta que queramos proteger
-const { validate, createUsersValidation } = require('../lib/validation');
+const { validate, createUsersValidation, loginValidation } = require('../lib/validation');
 
 const Cart = require('../models/cart');
 
@@ -28,7 +28,7 @@ router.get('/signin', isNotLoggedIn, (req, res) => {//Renderisa el formulario
     res.render('auth/signin');//Renderisamos signup
 });
 
-router.post('/signin', isNotLoggedIn, passport.authenticate('local.signin', {
+router.post('/signin', isNotLoggedIn, validate(loginValidation), passport.authenticate('local.signin', {
     // successRedirect: '/profile',
     successRedirect: '/products',
     failureRedirect: '/signin',
