@@ -35,6 +35,15 @@ router.post('/signin', isNotLoggedIn, validate(loginValidation), passport.authen
     failureFlash: true
 }));
 
+//RECOVERY
+router.get('/recovery', isNotLoggedIn, (req, res) => {//Renderisa el formulario
+    res.render('auth/recovery');//Renderisamos signup
+});
+
+router.post('/recovery', isNotLoggedIn, async (req, res) => {
+    console.log(req.body);
+});
+
 router.get('/logout', isLoggedIn, (req, res) => {
     const idUser = req.user.PERSONA_ID;
     Cart.deleteCart(idUser);

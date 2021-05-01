@@ -122,7 +122,7 @@ function createProductsValidation(data) {
     }
 
     if (Number(PRODUCTO_MEDIDA) <= 0) {
-        throw new Error('Campo medida debe ser mayor a 0');
+        throw new Error('Campo peso debe ser mayor a 0');
     }
 
     if (Number(CATEGORIA_ID) <= 0) {
@@ -180,7 +180,7 @@ function editProductsValidation(data) {
     }
 
     if (Number(PRODUCTO_MEDIDA) <= 0) {
-        throw new Error('Campo medida debe ser mayor a 0');
+        throw new Error('Campo peso debe ser mayor a 0');
     }
 
     if (Number(CATEGORIA_ID) <= 0) {

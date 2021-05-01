@@ -1,20 +1,25 @@
 <div class="container p-4">
     <div class="row">
         <div class="col-md-4 mx-auto">
-            <div class="card text-center">
-                <div class="card-header">
+            <div class="card">
+                <div class="card-header text-center">
                     <h3>
                         Ingreso
                     </h3>
                 </div>
                 <div class="card-body">
-                    <img src="/img/icono.png" alt="Logo Epresa" class="card-img-top mx-auto m-2 rounded-circle w-50">
+                    <div align="center">
+                        <img src="/img/icono.png" alt="Logo Epresa"
+                            class="card-img-top mx-auto m-2 rounded-circle w-50">
+                    </div>
                     <form action="/signin" method="POST">
                         <div class="mb-3">
-                            <input type="email" name="email" placeholder="Correo" class="form-control" required autofocus>
+                            <input type="email" name="email" placeholder="Correo" class="form-control" required
+                                autofocus>
                         </div>
                         <div class="mb-3">
-                            <input type="password" name="password" placeholder="Password" class="form-control" required>
+                            <input type="password" name="password" placeholder="Contraseña" class="form-control"
+                                required>
                         </div>
                         <div class="d-grid gap-2">
                             <button class="btn btn-primary">
@@ -27,13 +32,20 @@
                             <div class="col-md-12 control">
                                 <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
                                     <p>No tienes una cuenta!
-                                    <a href="/signup">
-                                        Regístrate Aquí
-                                    </a></p>
-                                    <p>Problemas con el ingreso a tú cuenta
-                                    <a href="https://forms.gle/VPbA95PwgEY5HD1V7">
-                                        Ingresa Aquí
-                                    </a></p>                                    
+                                        <a href="/signup">
+                                            Regístrate Aquí
+                                        </a>
+                                    </p>
+                                    <p>¿Olvidaste tu contraseña?
+                                        <a href="/recovery">
+                                            Ingresa Aquí
+                                        </a>
+                                    </p>
+                                    <p>¿Problemas con el ingreso a tú cuenta?
+                                        <a href="https://forms.gle/VPbA95PwgEY5HD1V7" target="_blank">
+                                            Ingresa Aquí
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
                         </div>

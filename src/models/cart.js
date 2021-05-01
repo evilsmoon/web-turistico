@@ -13,6 +13,7 @@ module.exports = class Cart {
             productDescripcion = product.PRODUCTO_DESCRIPCION,
             productCantidad = product.PRODUCTO_CANTIDAD,
             productPrecio = product.PRODUCTO_PRECIO,
+            productMedidaValor = product.PRODUCTO_MEDIDA,
             productOferta = product.OFERTA_DESCRIPCION,
             productCaducidad = product.PRODUCTO_FECHALIMITE.toLocaleDateString(),
             productIDProductor = product.PERSONA_ID,
@@ -49,6 +50,7 @@ module.exports = class Cart {
                 MEDIDA_NOMBRE: productMedida,
                 PRODUCTO_NOMBRE: productNombre,
                 PRODUCTO_DESCRIPCION: productDescripcion,
+                PRODUCTO_MEDIDA: productMedidaValor,
 
                 PRODUCTO_CANTIDAD: 1, //Base de compra, va a hacer siempre 1
                 CANTIDAD_TOTAL: productCantidad, //Stock de producto ofertado
