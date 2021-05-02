@@ -14,29 +14,42 @@
                     <button class="btn btn-outline-success " type="submit">Buscar</button>
                 </form>
                 <li class="nav-item">
-                    <a class="nav-link" href="/"><i class="fal fa-home-alt"></i> Inicio</a>
+                    <a class="nav-link" href="/">
+                        <i class="fal fa-home-alt"> Inicio</i>
+                    </a>
                 </li>
                 {{#if user}}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/cart"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                    <a class="nav-link" href="/cart">
+                        <i class="fas fa-shopping-cart"> Carrito</i>
+                    </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">Productos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/products"><i class="fal fa-universal-access">Visualisar</i>
-                            </a></li>
-                        <li><a class="dropdown-item" href="/products/add"><i class="fal fa-shopping-basket">Vender</i>
+                        <li>
+                            <a class="dropdown-item" href="/products">
+                                <i class="fal fa-universal-access"> Visualisar</i>
                             </a>
                         </li>
-                        <li><a class="dropdown-item" href="/shop"><i class="fal fa-cart-arrow-down">Comprar</i></a>
+                        <li>
+                            <a class="dropdown-item" href="/products/add">
+                                <i class="fal fa-shopping-basket"> Vender</i>
+                            </a>
+                        </li>
+                        <li><a class="dropdown-item" href="/shop">
+                                <i class="fal fa-cart-arrow-down"> Comprar</i>
+                            </a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="/logout"><i class="fal fa-sign-out"></i> Salir</a></li>
+                        <li><a class="dropdown-item" href="/logout">
+                                <i class="fal fa-sign-out"></i> Salir</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -44,10 +57,16 @@
                         data-bs-toggle="dropdown" aria-expanded="false">Detalle
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/detail/buy"><i class="fal fa-clipboard-list"> Compra</i></a>
+                        <li>
+                            <a class="dropdown-item" href="/detail/buy">
+                                <i class="fal fa-clipboard-list"> Compra</i>
+                            </a>
                         </li>
-                        <li><a class="dropdown-item" href="/detail/sell"><i class="fal fa-clipboard-list-check"></i>
-                                Venta</i></a></li>
+                        <li>
+                            <a class="dropdown-item" href="/detail/sell"><i class="fal fa-clipboard-list-check"></i>
+                                Venta</i>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -63,7 +82,9 @@
                 </li>
                 {{/if}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/info"><i class="fal fa-info-circle"></i> Información</a>
+                    <a class="nav-link" href="/info">
+                        <i class="fal fa-info-circle"> Acerca de</i>
+                    </a>
                 </li>
             </ul>
         </div>

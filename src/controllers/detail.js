@@ -86,7 +86,7 @@ module.exports = {
         doc
             .fillColor("#444444")
             .fontSize(15)
-            .text("Detalle Compra", 50, 300);
+            .text("Orden de Compra", 50, 300);
 
         //Head Table
         let invoiceTableHead = 330;
@@ -183,7 +183,7 @@ module.exports = {
         doc
             .fontSize(10)
             .font("Helvetica-Bold")
-            .text("Total:", 195, invoiceTableBody)
+            .text("Total: $", 193, invoiceTableBody)
 
             .fontSize(10)
             .font("Helvetica")
