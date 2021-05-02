@@ -45,11 +45,13 @@ module.exports = {
     },
 
     createCategoryPost: async (req, res) => { //Agregamos nueva categoria
-        const { CATEGORIA_NOMBRE, CATEGORIA_DESCRIPCION } = req.body;
+        const { CATEGORIA_NOMBRE, CATEGORIA_DESCRIPCION, CATEGORIA_ESTADO } = req.body;
         const newCategory = {
             CATEGORIA_NOMBRE,
-            CATEGORIA_DESCRIPCION
+            CATEGORIA_DESCRIPCION,
+            CATEGORIA_ESTADO
         }
+        newCategory.CATEGORIA_ESTADO = 'Verdadero';
         await pool.query('INSERT INTO CATEGORIA set ?', [newCategory]);
         res.redirect('/administrator/category');
     },
@@ -66,8 +68,13 @@ module.exports = {
     },
 
     createMeasurementsPost: async (req, res) => { //Agregamos nueva medida
-        const { MEDIDA_NOMBRE } = req.body;
-        await pool.query('INSERT INTO MEDIDA (MEDIDA_ID, MEDIDA_NOMBRE) VALUES (NULL, ?)', [MEDIDA_NOMBRE]);
+        const { MEDIDA_NOMBRE, MEDIDA_ESTADO } = req.body;
+        const newMeasurement = {
+            MEDIDA_NOMBRE,
+            MEDIDA_ESTADO,
+        }
+        newMeasurement.MEDIDA_ESTADO = 'Verdadero';
+        await pool.query('INSERT INTO MEDIDA set ?', [newMeasurement]);
         res.redirect('/administrator/measurements');
     },
 
@@ -83,8 +90,13 @@ module.exports = {
     },
 
     createPresentationPost: async (req, res) => { //Agremamos nueva presentacion
-        const { PRESENTACION_NOMBRE } = req.body;
-        await pool.query('INSERT INTO PRESENTACION (PRESENTACION_ID, PRESENTACION_NOMBRE) VALUES (NULL, ?)', [PRESENTACION_NOMBRE]);
+        const { PRESENTACION_NOMBRE, PRESENTACION_ESTADO } = req.body;
+        const newPresentation = {
+            PRESENTACION_NOMBRE,
+            PRESENTACION_ESTADO,
+        }
+        newPresentation.PRESENTACION_ESTADO = 'Verdadero';
+        await pool.query('INSERT INTO PRESENTACION set ?', [newPresentation]);
         res.redirect('/administrator/presentation');
     },
 
