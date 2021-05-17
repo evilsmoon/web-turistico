@@ -29,21 +29,18 @@
                                         <tr>
                                             <td>{{PRODUCTO_NOMBRE}}</td>
                                             <td>{{PRECIO_UNITARIO}}</td>
-                                            <td class="">
-                                                <div class="btn-group" role="group"
-                                                    aria-label="Basic mixed styles example">
-
+                                            <td>
+                                                <div class="btn-group">
                                                     <form action="/cart/min" method="POST">
                                                         <input type="hidden" name="PRODUCTO_ID" value="{{PRODUCTO_ID}}">
-                                                        <button type="submit" class="btn btn-danger">-</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm">-</button>
                                                     </form>
-
-                                                    <input type="text" class="text-center" name="PRODUCTO_CANTIDAD"
-                                                        value="{{PRODUCTO_CANTIDAD}}" readonly>
+                                                    <a href="#" class="btn btn-light btn-sm" data-toggle="modal">
+                                                        {{PRODUCTO_CANTIDAD}}</a>
 
                                                     <form action="/cart/max" method="POST">
                                                         <input type="hidden" name="PRODUCTO_ID" value="{{PRODUCTO_ID}}">
-                                                        <button type="submit" class="btn btn-success">+</button>
+                                                        <button type="submit" class="btn btn-success btn-sm">+</button>
                                                     </form>
 
                                                 </div>
@@ -80,9 +77,10 @@
             <div class="panel panel-default">
                 <div class="card">
                     <div class="card-header text-uppercase text-center">
-                        Tipo de Pago
+                        Acciones
                     </div>
                     <div class="card-body">
+                        <p class="text-center"><b>TIPO DE PAGO</b></p>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="PAGO_ID" id="flexRadioDefault1" value="1"
                                 checked>
@@ -98,34 +96,32 @@
                                     class="fas fa-money-check-edit-alt"></i> Deposito
                             </label>
                         </div>
-                    </div>
-                </div>
+                        <div class="mb-3">
+                        </div>
+                        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                        </div>
+                        <div class="d-grid gap-3">
+                            {{!-- Button trigger modal (Comprar) --}}
+                            <div class="d-grid gap-3">
+                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                    data-bs-target="#buyModal">
+                                    <i class="fal fa-shopping-cart"> Comprar</i>
+                                </button>
+                            </div>
 
-            </div>
+                            {{!-- Button trigger modal (Cancelar Pedido) --}}
+                            <div class="d-grid gap-3">
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#cancelModal">
+                                    <i class="far fa-window-close"> Cancelar Pedido</i>
+                                </button>
+                            </div>
 
-            <div class="panel panel-default">
-                <div class="mb-3">
-                </div>
-
-                <form action="/cart/buy" method="POST">
-                    <div class="d-grid gap-3">
-                        <input type="hidden" name="PAGO_ID" id="tipoPago" value="">
-                        <button type="submit" class="btn btn-outline-success"><i class="fal fa-shopping-cart"></i>
-                            Comprar</button>
+                            <div class="d-grid gap-3">
+                                <a href="/shop" class="btn btn-outline-primary" type="submit">Seguir Comprando</a>
+                            </div>
+                        </div>
                     </div>
-                </form>
-                <div class="mb-3">
-                </div>
-                <form action="/cart/delete" method="POST">
-                    <div class="d-grid gap-3">
-                        <button type="submit" class="btn btn-outline-danger"><i class="far fa-window-close"></i>
-                            Cancelar Pedido</button>
-                    </div>
-                </form>
-                <div class="mb-3">
-                </div>
-                <div class="d-grid gap-3">
-                    <a href="/shop" class="btn btn-outline-primary" type="submit">Seguir Comprando</a>
                 </div>
             </div>
         </div>
@@ -143,6 +139,60 @@
             </div>
         </div>
         {{/if}}
+
+        <!-- Modal (Comprar) -->
+        <div class="modal fade" id="buyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-success" id="staticBackdropLabel">
+                            <i class="fal fa-check-circle"> Realizar Pedido</i>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Esta seguro que desea realizar el pedido?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <form action="/cart/buy" method="POST">
+                            <div class="d-grid gap-3">
+                                <input type="hidden" name="PAGO_ID" id="tipoPago" value="">
+                                <button type="submit" class="btn btn-success">Aceptar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal (Cancelar Pedido) -->
+        <div class="modal fade" id="cancelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="staticBackdropLabel">
+                            <i class="fal fa-times-circle"> Cancelar Pedido</i>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estas seguro que sea cancelar su pedido?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <form action="/cart/delete" method="POST">
+                            <div class="d-grid gap-3">
+                                <button type="submit" class="btn btn-danger">Aceptar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

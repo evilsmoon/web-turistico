@@ -22,8 +22,8 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Nombre:</label>
                                                 <input type="text" value="{{product.PRODUCTO_NOMBRE}}"
-                                                    name="PRODUCTO_NOMBRE" class="form-control" placeholder="Nombre"
-                                                    maxlength="60"
+                                                    name="PRODUCTO_NOMBRE" class="form-control" placeholder="NOMBRE"
+                                                    maxlength="60" id="searchName" style="text-transform:uppercase"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required autofocus>
                                                 <font size=2 class="text-danger">Mínimo 3 caracteres</font>
@@ -73,7 +73,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Peso Unitario:</label>
                                                 <input type="number" step="0.01" value="{{product.PRODUCTO_MEDIDA}}"
-                                                    name="PRODUCTO_MEDIDA" class="form-control" placeholder="Peso"
+                                                    name="PRODUCTO_MEDIDA" class="form-control" placeholder="PESO"
                                                     maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
@@ -83,7 +83,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Cantidad Disponible:</label>
                                                 <input type="text" value="{{product.PRODUCTO_CANTIDAD}}"
-                                                    name="PRODUCTO_CANTIDAD" class="form-control" placeholder="Stock"
+                                                    name="PRODUCTO_CANTIDAD" class="form-control" placeholder="CANTIDAD"
                                                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
                                                     maxlength="6" maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -94,34 +94,49 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Precio Unitario:</label>
                                                 <input type="number" value="{{product.PRODUCTO_PRECIO}}"
-                                                    name="PRODUCTO_PRECIO" class="form-control" placeholder="Precio"
+                                                    name="PRODUCTO_PRECIO" class="form-control" placeholder="PRECIO"
                                                     maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
                                                 <font size=2 class="text-danger">Solo ingrese números</font>
                                             </div>
 
-                                            <div class="col-md-3">
-                                                {{!-- <label class="form-label">Fecha Expiracion:</label>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Fecha de Cosecha:</label>
                                                 <div class="form-label">
-                                                    <input class="form-control" value="{{product.PRODUCTO_FECHALIMITE}}"
-                                                        name="PRODUCTO_FECHALIMITE" type="date" id="validateTime"
-                                                        required>
-                                                </div> --}}
+                                                    <input class="form-control" value="{{fechaCosecha}}"
+                                                        name="PRODUCTO_FECHACOCECHA" type="date" required>
+                                                    <font size=2 class="text-danger">La fecha de cocecha debe ser menor
+                                                        a la del día de hoy</font>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">Fecha de Expiración:</label>
+                                                <div class="form-label">
+                                                    <input class="form-control" value="{{fechaLimite}}"
+                                                        name="PRODUCTO_FECHALIMITE" type="date" required>
+                                                    <font size=2 class="text-danger">La fecha de expiración debe ser
+                                                        mayor a la del día de hoy</font>
+                                                </div>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label">Descripción:</label>
-                                                <textarea name="PRODUCTO_DESCRIPCION" rows="2" class="form-control"
-                                                    placeholder="Description"
+                                                <textarea name="PRODUCTO_DESCRIPCION" rows="4" class="form-control"
+                                                    placeholder="DESCRIPCIÓN" maxlength="200"
+                                                    style="text-transform:uppercase"
+                                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>{{product.PRODUCTO_DESCRIPCION}}</textarea>
                                                 <font size=2 class="text-danger">Mínimo 10 caracteres</font>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label">Oferta:</label>
-                                                <textarea name="OFERTA_DESCRIPCION" rows="2" class="form-control"
-                                                    placeholder="Description">{{product.OFERTA_DESCRIPCION}}</textarea>
+                                                <textarea name="OFERTA_DESCRIPCION" rows="4" class="form-control"
+                                                    placeholder="OFERTA" maxlength="200"
+                                                    style="text-transform:uppercase"
+                                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">{{product.OFERTA_DESCRIPCION}}</textarea>
                                             </div>
 
                                             <div class="col-md-6">
@@ -194,4 +209,24 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     };
+
+    fetch('/autocompleteName')
+        .then(res => res.json())
+        .then(data => {
+
+            var productnames = [];
+
+            const products = '';
+
+            data.products.forEach(names => {
+                productnames.push(names.PRODUCTO_NOMBRE);
+            });
+
+            let uniqProducts = Array.from(new Set(productnames));
+
+            $("#searchName").autocomplete({
+                source: uniqProducts
+            });
+
+        });
 </script>

@@ -86,16 +86,12 @@ app.use('/detail', require('./routes/detail'));
 // Public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use((req, res, next) => {
-//     res.status(404).send('Page Not Found(Pagina no encontrada) No puede ser');
-//     // res.status(404).render('/profile');
-// });
-
-
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
-});
+app.use(function(req, res, next) {
+    var err = new Error('Pagina no encontrada');
+    err.status = 404;
+    next(err);
+  });
 
 // error handler
 app.use(function (err, req, res, next) {

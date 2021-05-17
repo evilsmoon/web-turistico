@@ -15,9 +15,16 @@ router.get('/direction', async (req, res) => {
 });
 
 router.get('/searchname', async (req, res) => {
-    const direction = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO WHERE PRODUCTO_ESTADO = "Verdadero"');
+    const products = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO WHERE PRODUCTO_ESTADO = "ACTIVO"');
     res.json({
-        direction
+        products
+    })
+});
+
+router.get('/autocompleteName', async (req, res) => {
+    const products = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO');
+    res.json({
+        products
     })
 });
 

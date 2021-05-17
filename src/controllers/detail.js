@@ -12,7 +12,7 @@ module.exports = {
 
     getDetailBuy: async (req, res) => {
         const { VENTA_ID } = req.params;
-        const detailBuy = await pool.query('SELECT * FROM DETALLE_VENTA LEFT JOIN VENTA ON DETALLE_VENTA.VENTA_ID = VENTA.VENTA_ID LEFT JOIN PRODUCTO ON DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID LEFT JOIN PERSONA ON DETALLE_VENTA.DETALLE_PRODUCTOR = PERSONA.PERSONA_ID LEFT JOIN DIRECCION ON DETALLE_VENTA.DIRECCION_ID = DIRECCION.DIRECCION_ID WHERE DETALLE_VENTA.VENTA_ID = ?', [VENTA_ID]);//DETALLE_DIRECCION=>DIRECCION_ID
+        const detailBuy = await pool.query('SELECT * FROM DETALLE_VENTA, PRODUCTO, PERSONA, DIRECCION WHERE DETALLE_VENTA.DETALLE_PRODUCTOR = PERSONA.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_ID = DETALLE_VENTA.PRODUCTO_ID AND DETALLE_VENTA.VENTA_ID = ?', [VENTA_ID]);
         const detailTotal = detailBuy[0];
 
         const pago = await pool.query('SELECT * FROM VENTA, TIPO_PAGO WHERE VENTA.PAGO_ID = TIPO_PAGO.PAGO_ID AND VENTA.VENTA_ID = ?', [VENTA_ID]);
@@ -37,7 +37,7 @@ module.exports = {
             .font("Helvetica-Bold")
             .text("Fecha de compra:", 400, 65)
             .font("Helvetica")
-            .text(detailTotal.VENTA_FECHA, 200, 65, { align: "right" })
+            .text(detailPay.VENTA_FECHA, 200, 65, { align: "right" })
             .text("Cotopaxi", 200, 80, { align: "right" })
             .moveDown();
 
@@ -176,18 +176,17 @@ module.exports = {
                 .stroke();
 
             invoiceTableBody = invoiceTableBody + 25;
-            console.log('position body: ' + invoiceTableBody);
         }
 
         // Table foot
         doc
             .fontSize(10)
             .font("Helvetica-Bold")
-            .text("Total: $", 193, invoiceTableBody)
+            .text("Total: $", 190, invoiceTableBody)
 
             .fontSize(10)
             .font("Helvetica")
-            .text(detailTotal.VENTA_TOTAL, 225, invoiceTableBody)
+            .text(detailPay.VENTA_TOTAL, 225, invoiceTableBody)
 
             .fontSize(10)
             .font("Helvetica-Bold")

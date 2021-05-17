@@ -1,3 +1,6 @@
+const fs = require('fs-extra');
+var md5 = require('md5');
+
 const pool = require('../database');
 
 const cloudinary = require('cloudinary').v2;
@@ -7,37 +10,39 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const fs = require('fs-extra');
-
 module.exports = {
 
     getAllProducts: async (req, res) => {
         var admin = false;
+        var addProducts = false;
 
-        const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "Verdadero" AND PERSONA_ID = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA )', [req.user.PERSONA_ID]);
+        const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA_ID = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA )', [req.user.PERSONA_ID]);
 
-        const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "Verdadero" AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
+        const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
 
         const people = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE DIRECCION.DIRECCION_ID = PERSONA.DIRECCION_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
         const rolAdmin = people[0];
 
         if (rolAdmin.ROL_ID == 1) {
-            console.log('Entro user admin');
             admin = true;
         }
 
-        res.render('products/list', { products, offer, profile: people[0], admin });
+        if (products.length == 0 && offer.length == 0) {
+            addProducts = true;
+        }
+
+        res.render('products/list', { products, offer, profile: people[0], admin, addProducts });
     },
 
     createProductPage: async (req, res) => {
-        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
-        const presentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "Verdadero"');
-        const measure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "Verdadero"');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
+        const presentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "ACTIVO"');
+        const measure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "ACTIVO"');
 
         res.render('products/add', { category, presentation, measure });
     },
 
-    createProductPost: async (req, res) => {
+    createProductPost: async (req, res, cb) => {
         console.log(req.body);
 
         var today = new Date();
@@ -63,7 +68,15 @@ module.exports = {
             PRODUCTO_URL
         };
 
-        newProduct.PRODUCTO_ESTADO = 'Verdadero';
+        const findName = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO, PERSONA WHERE PRODUCTO_ESTADO = "ACTIVO" AND PRODUCTO.PERSONA_ID = PRODUCTO.PERSONA_ID AND PRODUCTO.PRODUCTO_NOMBRE = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA) AND PERSONA.PERSONA_ID = ?', [PRODUCTO_NOMBRE, req.user.PERSONA_ID]);
+
+        if (findName.length > 0) {
+            return cb(new Error('Usted ya posee ' + PRODUCTO_NOMBRE + ' en su inventario'));
+        }
+
+        newProduct.PRODUCTO_ESTADO = 'ACTIVO';
+        newProduct.PRODUCTO_NOMBRE = newProduct.PRODUCTO_NOMBRE.toUpperCase();
+        newProduct.PRODUCTO_DESCRIPCION = newProduct.PRODUCTO_DESCRIPCION.toUpperCase();
 
         if (!newProduct.PRODUCTO_FECHAPUBLICACION) {
             newProduct.PRODUCTO_FECHAPUBLICACION = productDate;
@@ -100,6 +113,8 @@ module.exports = {
                 PRODUCTO_ID: lastProduct,
                 OFERTA_DESCRIPCION
             };
+
+            newOfert.OFERTA_DESCRIPCION = newOfert.OFERTA_DESCRIPCION.toUpperCase();
             console.log(newOfert);
             await pool.query('INSERT INTO OFERTA set ?', [newOfert]);
         }
@@ -110,7 +125,7 @@ module.exports = {
 
     deleteProduct: async (req, res) => {
         const { producto_id } = req.params;
-        await pool.query('UPDATE PRODUCTO SET PRODUCTO_ESTADO = "Falso" WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
+        await pool.query('UPDATE PRODUCTO SET PRODUCTO_ESTADO = "ELIMINADO" WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
         req.flash('success', 'Producto Eliminado');
         res.redirect('/products');//redireccionamos a la misma lista products
     },
@@ -130,15 +145,18 @@ module.exports = {
 
         const products = await pool.query('SELECT * FROM PRODUCTO LEFT JOIN CATEGORIA ON PRODUCTO.CATEGORIA_ID = CATEGORIA.CATEGORIA_ID LEFT JOIN MEDIDA ON PRODUCTO.MEDIDA_ID = MEDIDA.MEDIDA_ID LEFT JOIN PRESENTACION ON PRODUCTO.PRESENTACION_ID = PRESENTACION.PRESENTACION_ID LEFT JOIN OFERTA ON PRODUCTO.PRODUCTO_ID = OFERTA.PRODUCTO_ID WHERE PRODUCTO.PRODUCTO_ID = ?', [producto_id]);
 
-        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
+        const fechaCosecha = products[0].PRODUCTO_FECHACOCECHA.toLocaleDateString('sv-SE');
+        const fechaLimite = products[0].PRODUCTO_FECHALIMITE.toLocaleDateString('sv-SE');
 
-        const listcategory = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero" AND CATEGORIA.CATEGORIA_ID NOT IN (SELECT CATEGORIA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
 
-        const listpresentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "Verdadero" AND PRESENTACION.PRESENTACION_ID NOT IN (SELECT PRESENTACION_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        const listcategory = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO" AND CATEGORIA.CATEGORIA_ID NOT IN (SELECT CATEGORIA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        const listmeasure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "Verdadero" AND MEDIDA.MEDIDA_ID NOT IN (SELECT MEDIDA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+        const listpresentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "ACTIVO" AND PRESENTACION.PRESENTACION_ID NOT IN (SELECT PRESENTACION_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
 
-        res.render('products/edit', { product: products[0], productId: productsId[0], category, listcategory, listpresentation, listmeasure });
+        const listmeasure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "ACTIVO" AND MEDIDA.MEDIDA_ID NOT IN (SELECT MEDIDA_ID FROM PRODUCTO WHERE PRODUCTO_ID = ?)', [producto_id]);
+
+        res.render('products/edit', { product: products[0], productId: productsId[0], category, listcategory, listpresentation, listmeasure, fechaCosecha, fechaLimite });
     },
 
     editProductPost: async (req, res) => {
@@ -167,6 +185,8 @@ module.exports = {
         };
 
         console.log(newProduct);
+        newProduct.PRODUCTO_NOMBRE = newProduct.PRODUCTO_NOMBRE.toUpperCase();
+        newProduct.PRODUCTO_DESCRIPCION = newProduct.PRODUCTO_DESCRIPCION.toUpperCase();
 
         try {
             if (req.file.path) {
@@ -183,8 +203,6 @@ module.exports = {
 
         newProduct.PRODUCTO_ESTADO = products.PRODUCTO_ESTADO;
         newProduct.PRODUCTO_FECHAPUBLICACION = products.PRODUCTO_FECHAPUBLICACION;
-        newProduct.PRODUCTO_FECHACOCECHA = products.PRODUCTO_FECHACOCECHA
-        newProduct.PRODUCTO_FECHALIMITE = products.PRODUCTO_FECHALIMITE;
 
         console.log(newProduct);
 
@@ -192,7 +210,8 @@ module.exports = {
 
         if (find.length > 0 && OFERTA_DESCRIPCION) {
             console.log('Hacemos un update');
-            await pool.query('UPDATE OFERTA SET OFERTA_DESCRIPCION = ? WHERE OFERTA.PRODUCTO_ID = ?', [OFERTA_DESCRIPCION, producto_id]);
+            offer = OFERTA_DESCRIPCION.toUpperCase();
+            await pool.query('UPDATE OFERTA SET OFERTA_DESCRIPCION = ? WHERE OFERTA.PRODUCTO_ID = ?', [offer, producto_id]);
 
         } else if (find.length == 0 && OFERTA_DESCRIPCION) {
             console.log('Hacemos un insert');
@@ -200,6 +219,7 @@ module.exports = {
                 PRODUCTO_ID: producto_id,
                 OFERTA_DESCRIPCION
             };
+            newOfert.OFERTA_DESCRIPCION = OFERTA_DESCRIPCION.toUpperCase();
             console.log(newOfert);
             await pool.query('INSERT INTO OFERTA set ?', [newOfert]);
 
@@ -214,25 +234,19 @@ module.exports = {
         res.redirect('/products');
     },
 
-    //
-    //
-    //
-    //
-
     editPeoplePage: async (req, res) => {
         const people = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE DIRECCION.DIRECCION_ID = PERSONA.DIRECCION_ID AND PERSONA_ID = ?', [req.user.PERSONA_ID]);
 
         res.render('products/user', { profile: people[0] });
     },
 
-    editPeoplePost: async (req, res) => {
-        console.log(req.body);
+    editPeoplePost: async (req, res, cb) => {
         const { PERSONA_ID } = req.user;
 
         const rows = await pool.query('SELECT * FROM PERSONA WHERE PERSONA_ID = ?', [PERSONA_ID]);
         const profile = rows[0];
 
-        const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_EMAIL, PERSONA_CONTRASENA, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN, PERSONA_URL } = req.body;
+        const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_EMAIL, PERSONA_CONTRASENA, CONTRASENA_ANTIGUA, CONTRASENA_NUEVA, REPETIR_CONTRASENA, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN, PERSONA_URL } = req.body;
 
         const newUser = {
             DIRECCION_ID,
@@ -253,11 +267,28 @@ module.exports = {
             newUser.DIRECCION_ID = profile.DIRECCION_ID;
         }
 
+        newUser.PERSONA_NOMBRE = newUser.PERSONA_NOMBRE.toUpperCase();
         newUser.ROL_ID = profile.ROL_ID;
         newUser.PERSONA_EMAIL = profile.PERSONA_EMAIL;
-        newUser.PERSONA_CONTRASENA = profile.PERSONA_CONTRASENA;
+        // newUser.PERSONA_CONTRASENA = profile.PERSONA_CONTRASENA;
         newUser.PERSONA_ESTADO = profile.PERSONA_ESTADO;
         newUser.PERSONA_LOGIN = profile.PERSONA_LOGIN;
+
+        if (CONTRASENA_NUEVA) {
+            const password = await pool.query('SELECT * FROM PERSONA WHERE PERSONA.PERSONA_ID = ?', [req.user.PERSONA_ID]);
+
+            const oldPass = password[0];
+            const passMd5 = md5(CONTRASENA_ANTIGUA);
+
+            if (oldPass.PERSONA_CONTRASENA !== passMd5 || CONTRASENA_NUEVA !== REPETIR_CONTRASENA) {
+                return cb(new Error('Error de ingreso de contraseñas'));
+            }
+
+            newUser.PERSONA_CONTRASENA = md5(REPETIR_CONTRASENA);
+
+        } else {
+            newUser.PERSONA_CONTRASENA = profile.PERSONA_CONTRASENA;
+        }
 
         try {
             if (req.file.path) {

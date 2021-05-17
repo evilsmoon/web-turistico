@@ -12,7 +12,7 @@ const fs = require('fs-extra');
 module.exports = {
 
     getAllUsers: async (req, res) => { //Obtenemos todos los usuarios inactivos
-        const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID');
+        const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA_ESTADO = "ELIMINADO"');
         res.render('administrator/users', { persona });
     },
 
@@ -34,13 +34,13 @@ module.exports = {
         const loginHour = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
         const userLogin = loginDate + ' ' + loginHour;
 
-        await pool.query('UPDATE PERSONA SET PERSONA_ESTADO = "Verdadero", PERSONA_LOGIN = ? WHERE PERSONA.PERSONA_ID = ?', [userLogin, id]);
+        await pool.query('UPDATE PERSONA SET PERSONA_ESTADO = "ACTIVO", PERSONA_LOGIN = ? WHERE PERSONA.PERSONA_ID = ?', [userLogin, id]);
         req.flash('success', 'Usuario Activado');
         res.redirect('/administrator/users');
     },
 
     getAllCategory: async (req, res) => { //Obtenemos todas los categorias
-        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "Verdadero"');
+        const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
         res.render('administrator/category', { category });
     },
 
@@ -51,19 +51,21 @@ module.exports = {
             CATEGORIA_DESCRIPCION,
             CATEGORIA_ESTADO
         }
-        newCategory.CATEGORIA_ESTADO = 'Verdadero';
+        newCategory.CATEGORIA_NOMBRE = newCategory.CATEGORIA_NOMBRE.toUpperCase();
+        newCategory.CATEGORIA_DESCRIPCION = newCategory.CATEGORIA_DESCRIPCION.toUpperCase();
+        newCategory.CATEGORIA_ESTADO = 'ACTIVO';
         await pool.query('INSERT INTO CATEGORIA set ?', [newCategory]);
         res.redirect('/administrator/category');
     },
 
     deleteCategory: async (req, res) => { //Eliminamos la categoria seleccionada
         const { id } = req.params;
-        await pool.query('UPDATE CATEGORIA SET CATEGORIA_ESTADO = "Falso" WHERE CATEGORIA.CATEGORIA_ID = ?', [id]);
+        await pool.query('UPDATE CATEGORIA SET CATEGORIA_ESTADO = "ELIMINADO" WHERE CATEGORIA.CATEGORIA_ID = ?', [id]);
         res.redirect('/administrator/category');
     },
 
     getAllMeasurements: async (req, res) => { //Obtenemos todas las unidades de medida
-        const measure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "Verdadero"');
+        const measure = await pool.query('SELECT * FROM MEDIDA WHERE MEDIDA_ESTADO = "ACTIVO"');
         res.render('administrator/measurements', { measure });
     },
 
@@ -73,19 +75,20 @@ module.exports = {
             MEDIDA_NOMBRE,
             MEDIDA_ESTADO,
         }
-        newMeasurement.MEDIDA_ESTADO = 'Verdadero';
+        newMeasurement.MEDIDA_NOMBRE = newMeasurement.MEDIDA_NOMBRE.toUpperCase();
+        newMeasurement.MEDIDA_ESTADO = 'ACTIVO';
         await pool.query('INSERT INTO MEDIDA set ?', [newMeasurement]);
         res.redirect('/administrator/measurements');
     },
 
     deleteMeasurements: async (req, res) => { //Eliminamos la medida seleccionada
         const { id } = req.params;
-        await pool.query('UPDATE MEDIDA SET MEDIDA_ESTADO = "Falso" WHERE MEDIDA.MEDIDA_ID = ?', [id]);
+        await pool.query('UPDATE MEDIDA SET MEDIDA_ESTADO = "ELIMINADO" WHERE MEDIDA.MEDIDA_ID = ?', [id]);
         res.redirect('/administrator/measurements');
     },
 
     getAllPresentation: async (req, res) => { //Obtenemos todas las unidades de medida
-        const presentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "Verdadero"');
+        const presentation = await pool.query('SELECT * FROM PRESENTACION WHERE PRESENTACION_ESTADO = "ACTIVO"');
         res.render('administrator/presentation', { presentation });
     },
 
@@ -95,19 +98,20 @@ module.exports = {
             PRESENTACION_NOMBRE,
             PRESENTACION_ESTADO,
         }
-        newPresentation.PRESENTACION_ESTADO = 'Verdadero';
+        newPresentation.PRESENTACION_NOMBRE = newPresentation.PRESENTACION_NOMBRE.toUpperCase();
+        newPresentation.PRESENTACION_ESTADO = 'ACTIVO';
         await pool.query('INSERT INTO PRESENTACION set ?', [newPresentation]);
         res.redirect('/administrator/presentation');
     },
 
     deletePresentation: async (req, res) => { //Eliminamos la presentacion seleccionada
         const { id } = req.params;
-        await pool.query('UPDATE PRESENTACION SET PRESENTACION_ESTADO = "Falso" WHERE PRESENTACION.PRESENTACION_ID = ?', [id]);
+        await pool.query('UPDATE PRESENTACION SET PRESENTACION_ESTADO = "ELIMINADO" WHERE PRESENTACION.PRESENTACION_ID = ?', [id]);
         res.redirect('/administrator/presentation');
     },
 
     getAllInformation: async (req, res) => { //Obtenemos todas las unidades de medida
-        const information = await pool.query('SELECT * FROM INFORMACION WHERE INFORMACION_ESTADO = "Verdadero"');
+        const information = await pool.query('SELECT * FROM INFORMACION WHERE INFORMACION_ESTADO = "ACTIVO"');
         res.render('administrator/information', { information });
     },
 
@@ -119,12 +123,13 @@ module.exports = {
             INFORMACION_URL,
             INFORMACION_ESTADO
         }
+        newInfomation.INFORMACION_DESCRIPCION = newInfomation.INFORMACION_DESCRIPCION.toUpperCase();
         const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
         newInfomation.INFORMACION_IMAGEN = cloudImage.public_id;
         newInfomation.INFORMACION_URL = cloudImage.secure_url;
         await fs.unlink(req.file.path);
 
-        newInfomation.INFORMACION_ESTADO = 'Verdadero';
+        newInfomation.INFORMACION_ESTADO = 'ACTIVO';
 
         console.log(newInfomation);
         await pool.query('INSERT INTO INFORMACION set ?', [newInfomation]);
@@ -134,7 +139,7 @@ module.exports = {
 
     deleteInformation: async (req, res) => { //Eliminamos la presentacion seleccionada
         const { id } = req.params;
-        await pool.query('UPDATE INFORMACION SET INFORMACION_ESTADO = "Falso" WHERE INFORMACION.INFORMACION_ID = ?', [id]);
+        await pool.query('UPDATE INFORMACION SET INFORMACION_ESTADO = "ELIMINADO" WHERE INFORMACION.INFORMACION_ID = ?', [id]);
         res.redirect('/administrator/information');
     },
 

@@ -10,35 +10,43 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="/products/user/" class="row g-3 needs-validation" method="POST" enctype="multipart/form-data">
+                    <form action="/products/user/" class="row g-3 needs-validation" method="POST"
+                        enctype="multipart/form-data">
 
                         <div class="col-md-6">
                             <label class="form-label">Nombre:</label>
                             <input type="text" value="{{profile.PERSONA_NOMBRE}}" name="PERSONA_NOMBRE"
-                                placeholder="Nombre" class="form-control" maxlength="60" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required autofocus>
-                                <font size=2 class="text-danger">Mínimo 10 caracteres</font>
+                                placeholder="NOMBRE" class="form-control" maxlength="60"
+                                style="text-transform:uppercase"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required autofocus>
+                            <font size=2 class="text-danger">Mínimo 10 caracteres</font>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Telefono:</label>
+                            <label class="form-label">Teléfono:</label>
                             <input type="number" value="{{profile.PERSONA_TELEFONO}}" name="PERSONA_TELEFONO"
-                                placeholder="Telefono" class="form-control" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 " maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required>
-                                <font size=2 class="text-danger">Mínimo 8 números</font>
+                                placeholder="TELÉFONO" class="form-control"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
+                                maxlength="10"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required>
+                            <font size=2 class="text-danger">Mínimo 8 números</font>
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Provincia:</label>
                             <div class="form-label">
                                 <select id="provincia" class="form-select" aria-label="Default select example" required>
-                                    <option value="0" selected>Seleccione</option>
+                                    <option value="0" selected>SELECCIONE</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Canton:</label>
+                            <label class="form-label">Cantón:</label>
                             <div class="form-label">
                                 <select id="canton" class="form-select" aria-label="Default select example" required>
-                                    <option value="0" selected>Selecccione</option>
+                                    <option value="0" selected>SELECCIONE</option>
                                 </select>
                             </div>
                         </div>
@@ -47,9 +55,31 @@
                             <div class="form-label">
                                 <select id="parroquia" name="DIRECCION_ID" class="form-select"
                                     aria-label="Default select example" required>
-                                    <option value="0" selected>Selecccione</option>
+                                    <option value="0" selected>SELECCIONE</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Contraseña Antigua:</label>
+                            <input type="password" name="CONTRASENA_ANTIGUA" placeholder="CONTRASEÑA"
+                                class="form-control" maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                            <font size=2 class="text-danger">Mínimo 5 caracteres</font>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Contraseña Nueva:</label>
+                            <input type="password" name="CONTRASENA_NUEVA" placeholder="CONTRASEÑA"
+                                class="form-control" maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                            <font size=2 class="text-danger">Mínimo 5 caracteres</font>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Repetir Contraseña Nuevamente:</label>
+                            <input type="password" name="REPETIR_CONTRASENA" placeholder="CONTRASEÑA"
+                                class="form-control" maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                            <font size=2 class="text-danger">Mínimo 5 caracteres</font>
                         </div>
 
                         <div class="col-md-6">
@@ -60,14 +90,13 @@
                         </div>
 
                         <div class="col-md-6">
-                            <img src="{{profile.PERSONA_URL}}"
-                                class="img-thumbnail" width="300px">
+                            <img src="{{profile.PERSONA_URL}}" class="img-thumbnail" width="300px">
                         </div>
 
                         <div class="col-md-6">
                             <input type="file" accept="image/*" name="SUBIR_IMAGEN" class="form-control"
                                 onchange="loadFile(event)">
-                                <font size=2 class="text-danger">Solo subir imagenes</font>
+                            <font size=2 class="text-danger">Solo subir imagenes</font>
                             <p></p>
                             <img id="output" class="img-thumbnail" width="300px" />
                         </div>

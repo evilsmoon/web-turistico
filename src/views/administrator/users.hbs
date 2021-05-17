@@ -6,7 +6,6 @@
                 <div class="panel-body">
                     <div class="col-md-12">
                         <div class="row">
-                            {{#if persona}}
                             <div class="col-md-2">
                             </div>
                             <div class="col-md-8 text-center">
@@ -16,15 +15,15 @@
                                     <button class="btn btn-outline-success " type="submit">Buscar</button>
                                 </form>
                             </div>
+                            {{#if persona}}
                             <table class="table caption-top">
-                                <caption>Lista de Usuarios</caption>
+                                <caption>Lista de Usuarios Eliminados</caption>
                                 <thead class="text-center table-dark">
                                     <tr class="card-title text-uppercase">
                                         <td>Nombre</td>
                                         <td>Telefono</td>
                                         <td>Direccion</td>
                                         <td>Email</td>
-                                        <td>Estado</td>
                                         <td>Acciones</td>
                                     </tr>
                                 </thead>
@@ -35,7 +34,6 @@
                                         <td>{{PERSONA_TELEFONO}}</td>
                                         <td>{{PARROQUIA}}</td>
                                         <td>{{PERSONA_EMAIL}}</td>
-                                        <td>{{PERSONA_ESTADO}}</td>
                                         <td>
                                             <a href="/administrator/active/{{PERSONA_ID}}"
                                                 class="btn btn-success">Activar</a>
@@ -46,6 +44,8 @@
                             </table>
                             {{else}}
                             <div class="col-md-4 mx-auto">
+                                <div class="mb-3">
+                                </div>
                                 <div class="card card-body text-center">
                                     <p>Usuario no Encontrado
                                         <a href="/administrator/users" class="btn btn-primary">
@@ -97,15 +97,11 @@
 
             var usersnames = [];
 
-            const direction = '';
+            const users = '';
 
             data.direction.forEach(names => {
                 usersnames.push(names.PERSONA_NOMBRE);
             });
-
-            for (let i of usersnames) {
-                console.log('canton: ' + i.PERSONA_NOMBRE);
-            }
 
             let uniqUsers = Array.from(new Set(usersnames));
 

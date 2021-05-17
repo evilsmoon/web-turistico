@@ -17,15 +17,15 @@
 
                         <div class="col-md-8">
                             <label class="form-label">Nombre:</label>
-                            <input type="text" name="PERSONA_NOMBRE" placeholder="Nombre" class="form-control"
-                                maxlength="60"
+                            <input type="text" name="PERSONA_NOMBRE" placeholder="NOMBRE" class="form-control"
+                                style="text-transform:uppercase" maxlength="60"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 required autofocus>
-                            <font size=2 class="text-danger">Mínimo 10 caracteres</font>
+                            <font size=2 class=" text-danger">Mínimo 10 caracteres</font>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Telefono:</label>
-                            <input type="number" name="PERSONA_TELEFONO" placeholder="Telefono" class="form-control"
+                            <label class="form-label">Teléfono:</label>
+                            <input type="number" name="PERSONA_TELEFONO" placeholder="TELÉFONO" class="form-control"
                                 onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
                                 maxlength="10"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -34,34 +34,34 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Correo:</label>
-                            <input type="email" name="PERSONA_EMAIL" class="form-control" placeholder="Correo"
+                            <input type="email" name="PERSONA_EMAIL" class="form-control" placeholder="CORRREO"
                                 maxlength="60"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 required>
-                                <font size=2 class="text-danger">Solo correos válidos</font>
+                            <font size=2 class="text-danger">Solo correos válidos</font>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Contraseña:</label>
-                            <input type="password" name="PERSONA_CONTRASENA" placeholder="Contraseña"
+                            <input type="password" name="PERSONA_CONTRASENA" placeholder="CONTRASEÑA"
                                 class="form-control" maxlength="60"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 required>
-                            <font size=2 class="text-danger">Mínimo 8 caracteres</font>
+                            <font size=2 class="text-danger">Mínimo 5 caracteres</font>
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Provincia:</label>
                             <div class="form-label">
                                 <select id="provincia" class="form-select" aria-label="Default select example" required>
-                                    <option value="0" selected>Seleccione</option>
+                                    <option value="0" selected>SELECCIONE</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Canton:</label>
+                            <label class="form-label">Cantón:</label>
                             <div class="form-label">
                                 <select id="canton" class="form-select" aria-label="Default select example" required>
-                                    <option value="0" selected>Selecccione</option>
+                                    <option value="0" selected>SELECCIONE</option>
                                 </select>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                             <div class="form-label">
                                 <select id="parroquia" name="DIRECCION_ID" class="form-select"
                                     aria-label="Default select example" required>
-                                    <option value="0" selected>Selecccione</option>
+                                    <option value="0" selected>SELECCIONE</option>
                                 </select>
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                             <label class="form-label">Imagen:</label>
                             <input type="file" accept="image/*" name="SUBIR_IMAGEN" class="form-control"
                                 onchange="loadFile(event)">
-                                <font size=2 class="text-danger">Solo subir imagenes</font>
+                            <font size=2 class="text-danger">Solo subir imagenes</font>
                         </div>
 
                         <div class="col-12 text-center">

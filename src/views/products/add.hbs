@@ -22,7 +22,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Nombre:</label>
                                                 <input type="text" name="PRODUCTO_NOMBRE" class="form-control"
-                                                    placeholder="Nombre" maxlength="60"
+                                                    placeholder="NOMBRE" maxlength="60" id="searchName" style="text-transform:uppercase"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required autofocus>
                                                 <font size=2 class="text-danger">Mínimo 3 caracteres</font>
@@ -33,7 +33,7 @@
                                                 <div class="form-label">
                                                     <select name="CATEGORIA_ID" class="form-select"
                                                         aria-label="Default select example" required>
-                                                        <option value="0" selected>Selecccione</option>
+                                                        <option value="0" selected>SELECCIONE</option>
                                                         {{#each category}}
                                                         <option value="{{CATEGORIA_ID}}">{{CATEGORIA_NOMBRE}}</option>
                                                         {{/each}}
@@ -46,7 +46,7 @@
                                                 <div class="form-label">
                                                     <select name="PRESENTACION_ID" class="form-select"
                                                         aria-label="Default select example" required>
-                                                        <option value="0" selected>Selecccione</option>
+                                                        <option value="0" selected>SELECCIONE</option>
                                                         {{#each presentation}}
                                                         <option value="{{PRESENTACION_ID}}">{{PRESENTACION_NOMBRE}}
                                                         </option>
@@ -60,7 +60,7 @@
                                                 <div class="form-label">
                                                     <select name="MEDIDA_ID" class="form-select"
                                                         aria-label="Default select example" required>
-                                                        <option value="0" selected>Selecccione</option>
+                                                        <option value="0" selected>SELECCIONE</option>
                                                         {{#each measure}}
                                                         <option value="{{MEDIDA_ID}}">{{MEDIDA_NOMBRE}}
                                                         </option>
@@ -72,7 +72,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Peso Unitario:</label>
                                                 <input type="number" step="0.01" name="PRODUCTO_MEDIDA"
-                                                    class="form-control" placeholder="Peso" maxlength="6"
+                                                    class="form-control" placeholder="PESO" maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
                                                 <font size=2 class="text-danger">Solo ingrese números</font>
@@ -80,7 +80,7 @@
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Cantidad Disponible:</label>
-                                                <input type="text" name="PRODUCTO_CANTIDAD" placeholder="Cantidad"
+                                                <input type="text" name="PRODUCTO_CANTIDAD" placeholder="CANTIDAD"
                                                     class="form-control"
                                                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 0 "
                                                     maxlength="6"
@@ -92,7 +92,7 @@
                                             <div class="col-md-4">
                                                 <label class="form-label">Precio Unitario:</label>
                                                 <input type="number" step="0.01" name="PRODUCTO_PRECIO"
-                                                    class="form-control" placeholder="Precio" maxlength="6"
+                                                    class="form-control" placeholder="PRECIO UNITARIO" maxlength="6"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required>
                                                 <font size=2 class="text-danger">Solo ingrese números</font>
@@ -102,7 +102,7 @@
                                                 <label class="form-label">Fecha de Cosecha:</label>
                                                 <div class="form-label">
                                                     <input class="form-control" name="PRODUCTO_FECHACOCECHA" type="date"
-                                                        id="validateTime" required>
+                                                        required>
                                                     <font size=2 class="text-danger">La fecha de cocecha debe ser menor
                                                         a la del día de hoy</font>
                                                 </div>
@@ -112,7 +112,7 @@
                                                 <label class="form-label">Fecha de Expiración:</label>
                                                 <div class="form-label">
                                                     <input class="form-control" name="PRODUCTO_FECHALIMITE" type="date"
-                                                        id="validateTime" required>
+                                                        required>
                                                     <font size=2 class="text-danger">La fecha de expiración debe ser
                                                         mayor a la del día de hoy</font>
                                                 </div>
@@ -121,7 +121,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Descripción:</label>
                                                 <textarea name="PRODUCTO_DESCRIPCION" rows="4" class="form-control"
-                                                    placeholder="Descripción" maxlength="200"
+                                                    placeholder="DESCRIPCIÓN" maxlength="200" style="text-transform:uppercase"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                     required></textarea>
                                                 <font size=2 class="text-danger">Mínimo 10 caracteres</font>
@@ -130,7 +130,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">Oferta:</label>
                                                 <textarea name="OFERTA_DESCRIPCION" rows="4" class="form-control"
-                                                    placeholder="Oferta" maxlength="200"
+                                                    placeholder="OFERTA" maxlength="200" style="text-transform:uppercase"
                                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
                                             </div>
 
@@ -194,4 +194,24 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     };
+
+    fetch('/autocompleteName')
+        .then(res => res.json())
+        .then(data => {
+
+            var productnames = [];
+
+            const products = '';
+
+            data.products.forEach(names => {
+                productnames.push(names.PRODUCTO_NOMBRE);
+            });
+
+            let uniqProducts = Array.from(new Set(productnames));
+
+            $("#searchName").autocomplete({
+                source: uniqProducts
+            });
+
+        });
 </script>

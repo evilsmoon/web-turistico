@@ -99,15 +99,12 @@
 
             var productnames = [];
 
-            const direction = '';
+            const products = '';
 
-            data.direction.forEach(names => {
+            data.products.forEach(names => {
                 productnames.push(names.PRODUCTO_NOMBRE);
             });
 
-            //for (let i of productnames) {
-            //    console.log('canton: ' + i.PRODUCTO_NOMBRE);
-            //}
             let uniqProducts = Array.from(new Set(productnames));
 
             $("#search").autocomplete({
