@@ -75,7 +75,8 @@ module.exports = {
             const token = getToken({ PERSONA_EMAIL, PERSONA_CONTRASENA });
 
             // Obtener un template para el correo
-            const link = `http://localhost:3000/confirm-email/${token}`;
+            // const link = `http://localhost:3000/confirm-email/${token}`;
+            const link = `https://compraventa-cotopaxi.herokuapp.com/confirm-email/${token}`;
             const template = getTemplate(PERSONA_NOMBRE, link);
 
             // Enviar el email
@@ -148,8 +149,8 @@ module.exports = {
             // Generar token
             const token = getToken({ id, email, password });
 
-            const link = `http://localhost:3000/reset-password/${token}`;
-            // const link = `https://compraventa-cotopaxi.herokuapp.com/${user.PERSONA_ID}/${token}`;
+            // const link = `http://localhost:3000/reset-password/${token}`;
+            const link = `https://compraventa-cotopaxi.herokuapp.com/reset-password/${token}`;
             // console.log(link);
 
             // Obtener un template para el correo
