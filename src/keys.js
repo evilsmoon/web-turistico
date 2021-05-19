@@ -6,3 +6,11 @@ module.exports = {
         database: process.env.DB_DATABASE
     }
 }
+// module.exports = {
+//     database: {
+//         host: 'localhost',
+//         user: 'root',
+//         password: '',
+//         database: 'nombre_base'
+//     }
+// }

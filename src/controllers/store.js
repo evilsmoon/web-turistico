@@ -232,6 +232,7 @@ module.exports = {
             const row = await pool.query('SELECT MAX(VENTA_ID) AS ID FROM VENTA, PERSONA WHERE VENTA.PERSONA_ID = PERSONA.PERSONA_ID AND PERSONA.PERSONA_ID = ?', [req.user.PERSONA_ID]);
             const lastId = row[0];
             const lastSell = lastId.ID;
+            // const activado = 'ACTIVO';
 
             for (let i of products) {
                 const detailSell = {
@@ -241,8 +242,12 @@ module.exports = {
                     DETALLE_CANTIDAD: i.PRODUCTO_CANTIDAD,
                     DETALLE_PRECIOUNITARIO: i.PRECIO_UNITARIO,
                     DETALLE_PRECIOTOTAL: i.PRODUCTO_PRECIO,
-                    DETALLE_PRODUCTOR: i.PERSONA_ID
+                    DETALLE_PRODUCTOR: i.PERSONA_ID,
                 }
+
+                
+                // VISIBLE_COMPRADOR: activado,
+                // VISIBLE_VENDEDOR: activado,
 
                 console.log(detailSell);
 
