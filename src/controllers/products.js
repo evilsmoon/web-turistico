@@ -97,7 +97,18 @@ module.exports = {
             newProduct.PRODUCTO_URL = cloudImage.secure_url;
         }
 
-        console.log(newProduct);//Muestra datos del formulario        
+        // try {
+        //     if (req.file.filename) {
+        //         newProduct.PRODUCTO_IMAGEN = await req.file.filename;
+        //         newProduct.PRODUCTO_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
+        //     }
+        // } catch {
+        //     newProduct.PRODUCTO_IMAGEN = 'product.jpg';
+        //     newProduct.PRODUCTO_URL = 'http://localhost:3000/img/uploads/product.jpg';
+        // }
+
+        console.log(newProduct);//Muestra datos del formulario
+        console.log(req.file);
 
         await pool.query('INSERT INTO PRODUCTO set ?', [newProduct]);//await le dice a la funcion que esta peticion va a tomar su tiempo
 
@@ -201,6 +212,17 @@ module.exports = {
             newProduct.PRODUCTO_URL = products.PRODUCTO_URL;
         }
 
+        // try {
+        //     if (req.file.filename) {
+        //         // await fs.unlink(products.PRODUCTO_URL);
+        //         newProduct.PRODUCTO_IMAGEN = await req.file.filename;
+        //         newProduct.PRODUCTO_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
+        //     }
+        // } catch {
+        //     newProduct.PRODUCTO_IMAGEN = products.PRODUCTO_IMAGEN;
+        //     newProduct.PRODUCTO_URL = products.PRODUCTO_URL;
+        // }
+
         newProduct.PRODUCTO_ESTADO = products.PRODUCTO_ESTADO;
         newProduct.PRODUCTO_FECHAPUBLICACION = products.PRODUCTO_FECHAPUBLICACION;
 
@@ -302,6 +324,17 @@ module.exports = {
             newUser.PERSONA_IMAGEN = profile.PERSONA_IMAGEN;
             newUser.PERSONA_URL = profile.PERSONA_URL;
         }
+
+        // try {
+        //     if (req.file.filename) {
+        //         // await fs.unlink(newUser.PERSONA_URL);
+        //         newUser.PERSONA_IMAGEN = await req.file.filename;
+        //         newUser.PERSONA_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
+        //     }
+        // } catch {
+        //     newUser.PERSONA_IMAGEN = profile.PERSONA_IMAGEN;
+        //     newUser.PERSONA_URL = profile.PERSONA_URL;
+        // }
 
         console.log(newUser);
         await pool.query('UPDATE PERSONA set ? WHERE PERSONA_ID = ?', [newUser, PERSONA_ID]);

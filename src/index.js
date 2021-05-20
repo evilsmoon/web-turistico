@@ -47,7 +47,7 @@ app.use(passport.session());
 // Agregar imagenes
 const storage = multer.diskStorage({
     destination: path.join(__dirname, 'public/img/uploads'),
-    //destination: path.join('public/images/upload'),
+    // destination: path.join('public/images/upload'),
     filename: (req, file, cb, filename) => {
         cb(null, uuidv4() + path.extname(file.originalname));
     }

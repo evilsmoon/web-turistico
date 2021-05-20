@@ -6,12 +6,12 @@ const pool = require('../database');
 const { getToken, getTokenData } = require('../lib/jwt.config');
 const { getTemplate, sendEmail } = require('../lib/mail');
 
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
+// const cloudinary = require('cloudinary').v2;
+// cloudinary.config({
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     api_key: process.env.CLOUDINARY_API_KEY,
+//     api_secret: process.env.CLOUDINARY_API_SECRET
+// });
 
 module.exports = {
 
@@ -66,6 +66,16 @@ module.exports = {
                 newUser.PERSONA_IMAGEN = cloudImage.public_id;
                 newUser.PERSONA_URL = cloudImage.secure_url;
             }
+
+            // try {
+            //     if (req.file.filename) {
+            //         newUser.PERSONA_IMAGEN = await req.file.filename;
+            //         newUser.PERSONA_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
+            //     }
+            // } catch {
+            //     newUser.PERSONA_IMAGEN = 'product.jpg';
+            //     newUser.PERSONA_URL = 'http://localhost:3000/img/uploads/user.jpg';
+            // }
 
             console.log(newUser);
             await pool.query('INSERT INTO PERSONA SET ?', [newUser]);
