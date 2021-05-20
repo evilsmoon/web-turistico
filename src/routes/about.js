@@ -8,4 +8,9 @@ router.get('/info', async (req, res) => {
     res.render('about/info', { information });
 });
 
+router.get('/us', async (req, res) => {
+    const information = await pool.query('SELECT * FROM INFORMACION WHERE INFORMACION_ESTADO = "ACTIVO"');
+    res.render('about/us', { information });
+});
+
 module.exports = router;
