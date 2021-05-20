@@ -23,7 +23,7 @@ const {
     deleteInformation
 } = require('../controllers/administrator');
 
-router.get('/allusers', isAdmin, getAllUsers); //Obtenemos todos los usuarios inactivos
+router.get('/users', isAdmin, getAllUsers); //Obtenemos todos los usuarios inactivos
 router.get('/users/search', isAdmin, getSearchUsers); //Buscar usuarios por su nombre
 router.get('/active/:id', isAdmin, activeUser); //Activamos usuario por su ID
 
