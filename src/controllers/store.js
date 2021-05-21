@@ -4,20 +4,32 @@ const Cart = require('../models/cart');
 module.exports = {
 
     getAllProducts: async (req, res) => {
+        var findProducts = false;
 
         const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
 
         try {
             const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA) AND PERSONA.PERSONA_ID NOT IN ( ? )', [req.user.PERSONA_ID]);
-            res.render('store/shop', { products, category });
+
+            if (products.length == 0) {
+                findProducts = true;
+            }
+
+            res.render('store/shop', { products, category, findProducts });
         } catch {
             const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA)');
-            res.render('store/shop', { products, category });
+
+            if (products.length == 0) {
+                findProducts = true;
+            }
+
+            res.render('store/shop', { products, category, findProducts });
         }
     },
 
     getSearchProducts: async (req, res) => {
         const { buscar } = req.query;
+        var findProducts = false;
 
         const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
 
@@ -27,9 +39,14 @@ module.exports = {
 
                 const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PRODUCTO.PRODUCTO_NOMBRE = ? AND PERSONA.PERSONA_ID NOT IN ( ? )', [buscar, req.user.PERSONA_ID]);
 
-                res.render('store/shop', { products, category, offer });
+                if (products.length == 0 && offer.length == 0) {
+                    findProducts = true;
+                }
+
+                res.render('store/shop', { products, category, offer, findProducts });
             } else {
-                res.render('store/shop', { category });
+                findProducts = true;
+                res.render('store/shop', { category, findProducts });
             }
         } catch {
             if (buscar) {
@@ -37,15 +54,21 @@ module.exports = {
 
                 const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PRODUCTO.PRODUCTO_NOMBRE = ?', [buscar]);
 
-                res.render('store/shop', { products, offer, category });
+                if (products.length == 0 && offer.length == 0) {
+                    findProducts = true;
+                }
+
+                res.render('store/shop', { products, offer, category, findProducts });
             } else {
-                res.render('store/shop', { category, offer });
+                findProducts = true;
+                res.render('store/shop', { category, findProducts });
             }
         }
     },
 
     getPlaceProducts: async (req, res) => {
         const { DIRECCION_ID } = req.query;
+        var findProducts = false;
 
         const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
 
@@ -55,9 +78,14 @@ module.exports = {
 
                 const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND DIRECCION.DIRECCION_ID = ? AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PERSONA.PERSONA_ID NOT IN ( ? )', [DIRECCION_ID, req.user.PERSONA_ID]);
 
-                res.render('store/shop', { products, offer, category });
+                if (products.length == 0 && offer.length == 0) {
+                    findProducts = true;
+                }
+
+                res.render('store/shop', { products, offer, category, findProducts });
             } else {
-                res.render('store/shop', { category });
+                findProducts = true;
+                res.render('store/shop', { category, findProducts });
             }
         } catch {
             if (DIRECCION_ID !== '0') {
@@ -65,9 +93,14 @@ module.exports = {
 
                 const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND DIRECCION.DIRECCION_ID = ?', [DIRECCION_ID]);
 
-                res.render('store/shop', { products, offer, category });
+                if (products.length == 0 && offer.length == 0) {
+                    findProducts = true;
+                }
+
+                res.render('store/shop', { products, offer, category, findProducts });
             } else {
-                res.render('store/shop', { category });
+                findProducts = true;
+                res.render('store/shop', { category, findProducts });
             }
         }
 
@@ -75,7 +108,7 @@ module.exports = {
 
     getCategoryProducts: async (req, res) => {
         const { CATEGORIA_ID } = req.query;
-        console.log('CATEGORIA_ID: ' + CATEGORIA_ID);
+        var findProducts = false;
 
         const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
 
@@ -85,9 +118,14 @@ module.exports = {
 
                 const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND CATEGORIA.CATEGORIA_ID = ? AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PERSONA.PERSONA_ID NOT IN ( ? )', [CATEGORIA_ID, req.user.PERSONA_ID]);
 
-                res.render('store/shop', { products, offer, category });
+                if (products.length == 0 && offer.length == 0) {
+                    findProducts = true;
+                }
+
+                res.render('store/shop', { products, offer, category, findProducts });
             } else {
-                res.render('store/shop', { category });
+                findProducts = true;
+                res.render('store/shop', { category, findProducts });
             }
         } catch {
             if (CATEGORIA_ID) {
@@ -95,22 +133,39 @@ module.exports = {
 
                 const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND CATEGORIA.CATEGORIA_ID = ?', [CATEGORIA_ID]);
 
-                res.render('store/shop', { products, offer, category });
+                if (products.length == 0 && offer.length == 0) {
+                    findProducts = true;
+                }
+
+                res.render('store/shop', { products, offer, category, findProducts });
             } else {
-                res.render('store/shop', { category });
+                findProducts = true;
+                res.render('store/shop', { category, findProducts });
             }
         }
     },
 
     getOfferProducts: async (req, res) => {
+        var findProducts = false;
+
         const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');
 
         try {
             const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PERSONA.PERSONA_ID NOT IN ( ? )', [req.user.PERSONA_ID]);
-            res.render('store/offer', { offer, category });
+
+            if (offer.length == 0) {
+                findProducts = true;
+            }
+
+            res.render('store/offer', { offer, category, findProducts });
         } catch {
             const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID');
-            res.render('store/offer', { offer, category });
+
+            if (offer.length == 0) {
+                findProducts = true;
+            }
+
+            res.render('store/offer', { offer, category, findProducts });
         }
 
     },

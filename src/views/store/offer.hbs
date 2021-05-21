@@ -113,6 +113,21 @@
                     <div class="col-md-12">
                         <div class="row">
 
+                            {{#if findProducts}}
+                            <div class="col-md-4 mx-auto">
+                                <div class="card card-body text-center">
+                                    <p>Producto no Encontrado</p>
+                                </div>
+                            </div>
+                            {{/if}}
+
+                            {{#if offer}}
+                            <div class="rounded-pill clearfix"
+                                style="border: 1px dotted #FFC107; text-align:center; center{margin:16px 0;">
+                                <h5 style="color: #FFC107;">Productos en Oferta</h5>
+                            </div>
+                            <div class="mb-3">
+                            </div>
                             {{#each offer}}
                             <div class="col-md-3">
                                 <div class="card mb-4 shadow-sm">
@@ -151,8 +166,8 @@
                                                         <img src="{{PRODUCTO_URL}}" class="card-img-top"
                                                             alt="Card image cap">
                                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
-                                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}</p>
-                                                        <p class="m-2">Peso: {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p>
+                                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}} ({{PRESENTACION_NOMBRE}}) de {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p>
+                                                        {{!-- <p class="m-2">Peso: {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p> --}}
                                                         <p class="m-2">Descripción:</p>
                                                         <textarea rows="2" class="form-control"
                                                             readonly>{{PRODUCTO_DESCRIPCION}}</textarea>
@@ -183,13 +198,9 @@
                                     </div>
                                 </div>
                             </div>
-                            {{else}}
-                            <div class="col-md-4 mx-auto">
-                                <div class="card card-body text-center">
-                                    <p>Producto no Encontrado</p>
-                                </div>
-                            </div>
                             {{/each}}
+                            {{/if}}
+
                         </div>
                     </div>
                 </div>

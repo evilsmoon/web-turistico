@@ -92,7 +92,7 @@ module.exports = {
             // Enviar el email
             await sendEmail(PERSONA_EMAIL, 'Validación de cuenta', template);
 
-            req.flash('success', 'Cuenta creada con exito, por favor revise su correo');
+            req.flash('success', 'Cuenta creada con exito, por favor revise su correo para validación de token, tiene un limite de tiempo para validar');
             res.redirect('/signin');
         }
     },

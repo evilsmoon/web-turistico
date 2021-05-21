@@ -6,8 +6,10 @@ module.exports = {
 
     getAllBuy: async (req, res) => {
         const userId = req.user.PERSONA_ID;
-        const detail = await pool.query('SELECT * FROM VENTA WHERE PERSONA_ID = ?', [userId]);
-        res.render('detail/buy', { detail });
+        const detail = await pool.query('SELECT * FROM VENTA WHERE PERSONA_ID = ? ORDER BY VENTA.VENTA_ID DESC', [userId]);
+        const lastSell = detail[0];
+        console.log(lastSell);
+        res.render('detail/buy', { detail , lastSell});
     },
 
     getDetailBuy: async (req, res) => {
@@ -203,7 +205,7 @@ module.exports = {
 
     getAllSell: async (req, res) => {
         const userId = req.user.PERSONA_ID;
-        const detail = await pool.query('SELECT * FROM PERSONA, DETALLE_VENTA, VENTA, PRODUCTO, TIPO_PAGO WHERE VENTA.PERSONA_ID = PERSONA.PERSONA_ID AND VENTA.VENTA_ID = DETALLE_VENTA.VENTA_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND VENTA.PAGO_ID = TIPO_PAGO.PAGO_ID AND DETALLE_VENTA.DETALLE_PRODUCTOR = ?', [userId]);
+        const detail = await pool.query('SELECT * FROM PERSONA, DETALLE_VENTA, VENTA, PRODUCTO, TIPO_PAGO WHERE VENTA.PERSONA_ID = PERSONA.PERSONA_ID AND VENTA.VENTA_ID = DETALLE_VENTA.VENTA_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND VENTA.PAGO_ID = TIPO_PAGO.PAGO_ID AND DETALLE_VENTA.DETALLE_PRODUCTOR = ? ORDER BY DETALLE_VENTA.DETALLE_ID DESC', [userId]);
         res.render('detail/sell', { detail });
     }
 

@@ -116,18 +116,23 @@ module.exports = {
     },
 
     createInformationPost: async (req, res) => { //Agremamos nueva presentacion
-        const { INFORMACION_DESCRIPCION, INFORMACION_IMAGEN, INFORMACION_URL, INFORMACION_ESTADO } = req.body;
+        const { INFORMACION_NOMBRE, INFORMACION_CARGO, INFORMACION_DESCRIPCION, INFORMACION_IMAGEN, INFORMACION_URL, INFORMACION_ESTADO } = req.body;
         const newInfomation = {
+            INFORMACION_NOMBRE,
+            INFORMACION_CARGO,
             INFORMACION_DESCRIPCION,
             INFORMACION_IMAGEN,
             INFORMACION_URL,
             INFORMACION_ESTADO
         }
-        newInfomation.INFORMACION_DESCRIPCION = newInfomation.INFORMACION_DESCRIPCION.toUpperCase();
+        
         const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
         newInfomation.INFORMACION_IMAGEN = cloudImage.public_id;
         newInfomation.INFORMACION_URL = cloudImage.secure_url;
         await fs.unlink(req.file.path);
+
+        // newInfomation.INFORMACION_IMAGEN = await req.file.filename;
+        // newInfomation.INFORMACION_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
 
         newInfomation.INFORMACION_ESTADO = 'ACTIVO';
 

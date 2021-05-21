@@ -1,0 +1,114 @@
+<div class="container p-4">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-9 col-md-push-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-8 text-center">
+                                <form class="d-flex" action="/administrator/users/search" method="GET">
+                                    <input class="form-control me-2" type="search" name="buscar" id="search"
+                                        placeholder="Buscar Usuario" aria-label="Search">
+                                    <button class="btn btn-outline-success " type="submit">Buscar</button>
+                                </form>
+                            </div>
+                            {{#if persona}}
+                            <table class="table caption-top">
+                                <caption>Lista de Usuarios Eliminados</caption>
+                                <thead class="text-center table-dark">
+                                    <tr class="card-title text-uppercase">
+                                        <td>Nombre</td>
+                                        <td>Telefono</td>
+                                        <td>Direccion</td>
+                                        <td>Email</td>
+                                        <td>Acciones</td>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    {{#each persona}}
+                                    <tr>
+                                        <td>{{PERSONA_NOMBRE}}</td>
+                                        <td>{{PERSONA_TELEFONO}}</td>
+                                        <td>{{PARROQUIA}}</td>
+                                        <td>{{PERSONA_EMAIL}}</td>
+                                        <td>
+                                            <a href="/administrator/active/{{PERSONA_ID}}"
+                                                class="btn btn-success">Activar</a>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                            {{else}}
+                            <div class="col-md-4 mx-auto">
+                                <div class="mb-3">
+                                </div>
+                                <div class="card card-body text-center">
+                                    <p>Usuario no Encontrado
+                                        <a href="/administrator/users" class="btn btn-primary">
+                                            Regresar
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-3 col-md-pull-9">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <h3 class="panel-title">Acciones</h3>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="d-grid gap-3">
+                    <a href="/administrator/category" class="btn btn-outline-success">
+                        <i class="fal fa-list"> Categorias</i>
+                    </a>
+                    <a href="/administrator/measurements" class="btn btn-outline-info">
+                        <i class="far fa-ruler"> Unidad de Medida</i>
+                    </a>
+                    <a href="/administrator/presentation" class="btn btn-outline-primary">
+                        <i class="fal fa-sack"> Presentación</i>
+                    </a>
+                    <a href="/administrator/information" class="btn btn-outline-warning">
+                        <i class="fal fa-info-circle"> Información</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    /*fetch('/administrator/listusers')
+        .then(res => res.json())
+        .then(data => {
+
+            var usersnames = [];
+
+            const users = '';
+
+            data.direction.forEach(names => {
+                usersnames.push(names.PERSONA_NOMBRE);
+            });
+
+            let uniqUsers = Array.from(new Set(usersnames));
+
+            $("#search").autocomplete({
+                source: uniqUsers
+            });
+
+        });*/
+
+</script>

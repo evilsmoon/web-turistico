@@ -28,7 +28,7 @@
                                         {{#each products}}
                                         <tr>
                                             <td>{{PRODUCTO_NOMBRE}}</td>
-                                            <td>{{PRECIO_UNITARIO}}</td>
+                                            <td>$ {{PRECIO_UNITARIO}}</td>
                                             <td>
                                                 <div class="btn-group">
                                                     <form action="/cart/min" method="POST">
@@ -62,7 +62,7 @@
                                     <tfoot class="text-center">
                                         <td>TOTAL: </td>
                                         <td class="table-success text-center">
-                                            {{totalPrice}}
+                                            $ {{totalPrice}}
                                         </td>
                                     </tfoot>
                                 </table>

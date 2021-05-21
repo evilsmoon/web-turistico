@@ -4,25 +4,21 @@
         <div class="col-md-7">
             <div class="thumbnail row">
                 <table class="table caption-top">
-                    <caption>Lista de la información sobre la asociación</caption>
+                    <caption>Lista de colaboradores de la asociación</caption>
                     <thead class="text-center table-secondary">
                         <tr class="card-title text-uppercase">
-                            <td>N°</td>
+                            <td>Nombre</td>
+                            <td>Cargo</td>
                             <td>Descripcion</td>
-                            <td>Imagen</td>
                             <td>Eliminar</td>
                         </tr>
                     </thead>
                     <tbody>
                         {{#each information}}
                         <tr>
-                            <td>{{INFORMACION_ID}}</td>
+                            <td>{{INFORMACION_NOMBRE}}</td>
+                            <td>{{INFORMACION_CARGO}}</td>
                             <td>{{INFORMACION_DESCRIPCION}}</td>
-                            <td>
-                                <a href="{{INFORMACION_URL}}" target="_blank">
-                                    <img class="card-img-top" src="{{INFORMACION_URL}}" width="90px" height="150px">
-                                </a>
-                            </td>
                             <td>
                                 <a href="/administrator/information/{{INFORMACION_ID}}"
                                     class="btn btn-danger">Eliminar</a>
@@ -36,15 +32,29 @@
         <div class="col-md-3">
             <div class="card border-dark mb-3">
                 <div class="card-header text-center card-title">
-                    <h5>Agregar Información</h5>
+                    <h5>Agregar Colaboradores</h5>
                 </div>
                 <div class="card-body text-dark">
                     <form action="/administrator/information" method="POST" class="row g-3 needs-validation"
                         enctype="multipart/form-data">
                         <p>
+                            <label class="form-label">Nombre:</label>
+                            <input type="text" name="INFORMACION_NOMBRE" class="form-control" placeholder="Nombre"
+                                maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required autofocus>
+
+                            <label class="form-label">Cargo:</label>
+                            <input type="text" name="INFORMACION_CARGO" class="form-control" placeholder="Cargo"
+                                maxlength="60"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required>
+
                             <label class="form-label">Descripción:</label>
-                            <textarea name="INFORMACION_DESCRIPCION" rows="2" class="form-control"
-                                style="text-transform:uppercase" placeholder="Descripción" required></textarea>
+                            <textarea name="INFORMACION_DESCRIPCION" rows="4" class="form-control"
+                                placeholder="Descripción" maxlength="300"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                required></textarea>
                         </p>
                         <p>
                             <input type="file" accept="image/*" name="SUBIR_IMAGEN" class="form-control"
