@@ -115,7 +115,7 @@ module.exports = {
         res.render('administrator/information', { information });
     },
 
-    createInformationPost: async (req, res) => { //Agremamos nueva presentacion
+    createInformationPost: async (req, res, cb) => { //Agremamos nueva presentacion
         const { INFORMACION_NOMBRE, INFORMACION_CARGO, INFORMACION_DESCRIPCION, INFORMACION_IMAGEN, INFORMACION_URL, INFORMACION_ESTADO } = req.body;
         const newInfomation = {
             INFORMACION_NOMBRE,
@@ -125,11 +125,15 @@ module.exports = {
             INFORMACION_URL,
             INFORMACION_ESTADO
         }
-        
-        const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
-        newInfomation.INFORMACION_IMAGEN = cloudImage.public_id;
-        newInfomation.INFORMACION_URL = cloudImage.secure_url;
-        await fs.unlink(req.file.path);
+
+        try {
+            const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
+            newInfomation.INFORMACION_IMAGEN = cloudImage.public_id;
+            newInfomation.INFORMACION_URL = cloudImage.secure_url;
+            await fs.unlink(req.file.path);
+        } catch (error) {
+            return cb(new Error('Agregue una imagen'));
+        }
 
         // newInfomation.INFORMACION_IMAGEN = await req.file.filename;
         // newInfomation.INFORMACION_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
@@ -137,7 +141,11 @@ module.exports = {
         newInfomation.INFORMACION_ESTADO = 'ACTIVO';
 
         console.log(newInfomation);
-        await pool.query('INSERT INTO INFORMACION set ?', [newInfomation]);
+        try {
+            await pool.query('INSERT INTO INFORMACION set ?', [newInfomation]);
+        } catch (error) {
+            return cb(new Error('Error al ingresar información'));
+        }
 
         res.redirect('/administrator/information');
     },

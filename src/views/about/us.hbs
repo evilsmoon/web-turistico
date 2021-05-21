@@ -5,10 +5,42 @@
         <div class="col-md-3">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body text-center">
-                    <img src="{{INFORMACION_URL}}" class="card-img-top" width="90px" height="350px">
+                    <a href="{{INFORMACION_URL}}" target="_blank" data-bs-toggle="modal"
+                        data-bs-target="#myModal{{@index}}">
+                        <img src="{{INFORMACION_URL}}" class="card-img-top" width="90px" height="350px">
+                    </a>
+                    {{!-- <img src="{{INFORMACION_URL}}" class="card-img-top" width="90px" height="350px"> --}}
                     <p class="m-2" style="color: #FFC107;">{{INFORMACION_NOMBRE}}</p>
                     <p class="m-2">{{INFORMACION_CARGO}}</p>
                 </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal{{@index}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    {{PRODUCTO_NOMBRE}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <img src="{{INFORMACION_URL}}" class="card-img-top" alt="Card image cap">
+                                <p class="m-2 text-center" style="color: #FFC107;">{{INFORMACION_NOMBRE}}</p>
+                                <p class="m-2 text-center">{{INFORMACION_CARGO}}</p>
+                                <p class="m-2" style='text-align: justify;'>{{INFORMACION_DESCRIPCION}}</p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{!-- --}}
+
             </div>
         </div>
         {{else}}
