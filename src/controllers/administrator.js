@@ -11,15 +11,15 @@ const fs = require('fs-extra');
 
 module.exports = {
 
-    getAllUsers: async (req, res) => { //Obtenemos todos los usuarios inactivos
+    getDeleteUsers: async (req, res) => { //Obtenemos todos los usuarios inactivos
         const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA_ESTADO = "ELIMINADO"');
         res.render('administrator/users', { persona });
     },
 
-    getSearchUsers: async (req, res) => { //Buscar usuarios por su nombre
+    searchDeleteUsers: async (req, res) => { //Buscar usuarios por su nombre
         const { buscar } = req.query;
         if (buscar) {
-            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID AND PERSONA_NOMBRE =  ?', [buscar]);
+            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID AND PERSONA_ESTADO = "ELIMINADO" AND PERSONA_NOMBRE =  ?', [buscar]);
             res.render('administrator/users', { persona });
         } else {
             res.render('administrator/users');
@@ -38,6 +38,33 @@ module.exports = {
         req.flash('success', 'Usuario Activado');
         res.redirect('/administrator/users');
     },
+
+    // ------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
+    getAllUsers: async (req, res) => { //Obtenemos pagina de admin
+        res.render('administrator/addAdmin');
+    },
+
+    getSearchUsers: async (req, res) => { //Buscar usuarios por su nombre
+        const { buscar } = req.query;
+        if (buscar) {
+            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID AND PERSONA_ESTADO = "ACTIVO" AND PERSONA_NOMBRE =  ?', [buscar]);
+            res.render('administrator/addAdmin', { persona });
+        } else {
+            res.render('administrator/addAdmin');
+        }
+    },
+
+    activeAdmin: async (req, res) => { //Activamos usuario por su ID
+        const { id } = req.params;
+        await pool.query('UPDATE PERSONA SET ROL_ID = 1 WHERE PERSONA.PERSONA_ID = ?', [id]);
+        const rows = await pool.query('SELECT PERSONA_NOMBRE FROM PERSONA WHERE PERSONA_ID = ?', [id]);
+        const persona = rows[0].PERSONA_NOMBRE;
+        req.flash('success', 'El usuario ' + persona +' ahora posee permisos de administrador');
+        res.redirect('/administrator/addAdmin');
+    },
+    // ------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
 
     getAllCategory: async (req, res) => { //Obtenemos todas los categorias
         const category = await pool.query('SELECT * FROM CATEGORIA WHERE CATEGORIA_ESTADO = "ACTIVO"');

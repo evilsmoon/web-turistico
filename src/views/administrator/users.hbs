@@ -15,6 +15,14 @@
                                     <button class="btn btn-outline-success " type="submit">Buscar</button>
                                 </form>
                             </div>
+                            <div class="mb-3">
+                            </div>
+                            <div class="rounded-pill clearfix"
+                                style="border: 1px dotted #888; text-align:center; center{margin:16px 0;">
+                                <h5 style="color: #888;">Personas con cuentas desactivadas</h5>
+                            </div>
+                            <div class="mb-3">
+                            </div>
                             {{#if persona}}
                             <table class="table caption-top">
                                 <caption>Lista de Usuarios Eliminados</caption>
@@ -70,6 +78,9 @@
 
             <div class="panel panel-default">
                 <div class="d-grid gap-3">
+                    <a href="/administrator/addAdmin" class="btn btn-outline-secondary">
+                        <i class="fal fa-check-circle"> Agregar Administrador</i>
+                    </a>
                     <a href="/administrator/category" class="btn btn-outline-success">
                         <i class="fal fa-list"> Categorias</i>
                     </a>

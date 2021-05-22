@@ -8,16 +8,24 @@
                         <div class="row">
                             <div class="col-md-2">
                             </div>
+                            <div class="mb-3">
+                            </div>
+                            <div class="rounded-pill clearfix"
+                                style="border: 1px dotted #888; text-align:center; center{margin:16px 0;">
+                                <h5 style="color: #888;">Agregar perfil de Administrador</h5>
+                            </div>
+                            <div class="mb-3">
+                            </div>
                             <div class="col-md-8 text-center">
-                                <form class="d-flex" action="/administrator/users/search" method="GET">
+                                <form class="d-flex" action="/administrator/addAdmin/search" method="GET">
                                     <input class="form-control me-2" type="search" name="buscar" id="search"
                                         placeholder="Buscar Usuario" aria-label="Search">
                                     <button class="btn btn-outline-success " type="submit">Buscar</button>
                                 </form>
-                            </div>
+                            </div>                            
                             {{#if persona}}
                             <table class="table caption-top">
-                                <caption>Lista de Usuarios Eliminados</caption>
+                                <caption>Lista de Usuarios</caption>
                                 <thead class="text-center table-dark">
                                     <tr class="card-title text-uppercase">
                                         <td>Nombre</td>
@@ -35,7 +43,7 @@
                                         <td>{{PARROQUIA}}</td>
                                         <td>{{PERSONA_EMAIL}}</td>
                                         <td>
-                                            <a href="/administrator/active/{{PERSONA_ID}}"
+                                            <a href="/administrator/activeAdmin/{{PERSONA_ID}}"
                                                 class="btn btn-success">Activar</a>
                                         </td>
                                     </tr>
@@ -43,17 +51,6 @@
                                 </tbody>
                             </table>
                             {{else}}
-                            <div class="col-md-4 mx-auto">
-                                <div class="mb-3">
-                                </div>
-                                <div class="card card-body text-center">
-                                    <p>Usuario no Encontrado
-                                        <a href="/administrator/users" class="btn btn-primary">
-                                            Regresar
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
                             {{/if}}
                         </div>
                     </div>
@@ -70,6 +67,9 @@
 
             <div class="panel panel-default">
                 <div class="d-grid gap-3">
+                    <a href="/administrator/users" class="btn btn-outline-secondary">
+                            <i class="fal fa-user"> Usuarios</i>
+                        </a>
                     <a href="/administrator/category" class="btn btn-outline-success">
                         <i class="fal fa-list"> Categorias</i>
                     </a>
