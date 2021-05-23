@@ -1,7 +1,7 @@
 <div class="container p-4">
     <div class="row">
 
-        <div class="col-xs-12 col-md-2 col-md-pull-9">
+        <div class="col-xs-12 col-md-3 col-md-pull-9">
             <div class="panel panel-default">
                 <div class="card">
                     <div class="card-header">
@@ -88,7 +88,8 @@
                                         </h3>
                                         <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px" height="150px">
                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
-                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}</p>
+                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}
+                                            ({{PRESENTACION_NOMBRE}})</p>
                                         <p class="m-2">Caduca: {{timeago PRODUCTO_FECHALIMITE}}</p>
 
                                         <div class="d-grid gap-3">
@@ -125,7 +126,8 @@
                                         </h3>
                                         <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px" height="150px">
                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
-                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}</p>
+                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}
+                                            ({{PRESENTACION_NOMBRE}})</p>
                                         <p class="m-2">Caduca: {{timeago PRODUCTO_FECHALIMITE}}</p>
 
                                         <div class="d-grid gap-3">
