@@ -147,7 +147,10 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <img src="{{product.PRODUCTO_URL}}" class="img-thumbnail" width="300px">
+                                                <img id="previewProduct{{@index}}" src="" class="img-thumbnail"
+                                                    width="300px">
+                                                <input type="hidden" id="responseProduct{{@index}}" class="form-control"
+                                                    value="{{product.PRODUCTO_IMAGEN}}">
                                             </div>
 
                                             <div class="col-md-6">
@@ -229,4 +232,41 @@
             });
 
         });
+
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    var contentType = 'image/png';
+
+    // Cargar Imagen Antigua
+    var responseProduct = document.getElementById('responseProduct');
+    var b64DataProduct = responseProduct.value;
+
+    var blobProduct = b64toBlob(b64DataProduct, contentType);
+    var blobUrlProduct = URL.createObjectURL(blobProduct);
+
+    var previewProduct = document.getElementById('previewProduct');
+    previewProduct.src = blobUrlProduct;
+
 </script>

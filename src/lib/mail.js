@@ -22,7 +22,7 @@ const getTemplate = (name, link) => {
       </head>
       
       <div id="email___content">      
-        <h2>Red De Profesionales De Cotopaxi</h2>
+        <h2>Red de Profesionales de Cotopaxi</h2>
         <h3>Hola ${name}</h3>
         <p>
         Confirmar cuenta,

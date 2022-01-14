@@ -69,8 +69,8 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Contraseña Nueva:</label>
-                            <input type="password" name="CONTRASENA_NUEVA" placeholder="CONTRASEÑA"
-                                class="form-control" maxlength="60"
+                            <input type="password" name="CONTRASENA_NUEVA" placeholder="CONTRASEÑA" class="form-control"
+                                maxlength="60"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                             <font size=2 class="text-danger">Mínimo 5 caracteres</font>
                         </div>
@@ -90,7 +90,9 @@
                         </div>
 
                         <div class="col-md-6">
-                            <img src="{{profile.PERSONA_URL}}" class="img-thumbnail" width="300px">
+                            <img id="previewProfile{{@index}}" src="" class="img-thumbnail" width="300px">
+                            <input type="hidden" id="responseProfile{{@index}}" class="form-control"
+                                value="{{profile.PERSONA_IMAGEN}}">
                         </div>
 
                         <div class="col-md-6">
@@ -206,5 +208,41 @@
             }
 
         });
+
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    var contentType = 'image/png';
+
+    // Cargar Imagen Perfil
+    var responseProfile = document.getElementById('responseProfile');
+    var b64DataProfile = responseProfile.value;
+
+    var blobProfile = b64toBlob(b64DataProfile, contentType);
+    var blobUrlProfile = URL.createObjectURL(blobProfile);
+
+    var previewProfile = document.getElementById('previewProfile');
+    previewProfile.src = blobUrlProfile;
 
 </script>

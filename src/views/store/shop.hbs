@@ -121,6 +121,7 @@
                             </div>
                             {{/if}}
 
+                            <input type="hidden" id="offerLength" class="form-control" value="{{numOffers}}">
                             {{#if offer}}
                             <div class="rounded-pill clearfix"
                                 style="border: 1px dotted #FFC107; text-align:center; center{margin:16px 0;">
@@ -136,22 +137,25 @@
                                         <h3 class="card-title text-uppercase text-center">
                                             {{PRODUCTO_NOMBRE}}
                                         </h3>
-                                        <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px" height="150px">
+                                        <img id="previewOffer{{@index}}" src="" class="card-img-top" width="90px"
+                                            height="150px">
+                                        <input type="hidden" id="responseOffer{{@index}}" class="form-control"
+                                            value="{{PRODUCTO_IMAGEN}}">
                                         <p class="m-2">Precio: <label class="text-danger">$ Oferta</label></p>
-                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}</p>
+                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}} ({{PRESENTACION_NOMBRE}})</p>
                                         <p class="m-2">Dirección: {{PARROQUIA}}</p>
 
                                         {{!-- --}}
                                         <!-- Button trigger modal -->
                                         <div class="d-grid gap-3">
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#myModal{{@index}}">
+                                                data-bs-target="#myModalOffer{{@index}}">
                                                 Ver Producto
                                             </button>
                                         </div>
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="myModal{{@index}}" tabindex="-1"
+                                        <div class="modal fade" id="myModalOffer{{@index}}" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
@@ -163,11 +167,14 @@
                                                     </div>
 
                                                     <div class="modal-body">
-                                                        <img src="{{PRODUCTO_URL}}" class="card-img-top"
-                                                            alt="Card image cap">
+                                                        <img id="previewOfferModal{{@index}}" src=""
+                                                            class="card-img-top" alt="Card image cap">
+                                                        <input type="hidden" id="responseOfferModal{{@index}}"
+                                                            class="form-control" value="{{PRODUCTO_IMAGEN}}">
                                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
-                                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}} ({{PRESENTACION_NOMBRE}}) de {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p>
-                                                        {{!-- <p class="m-2">Peso: {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p> --}}
+                                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}
+                                                            ({{PRESENTACION_NOMBRE}}) de {{PRODUCTO_MEDIDA}}
+                                                            ({{MEDIDA_NOMBRE}})</p>
                                                         <p class="m-2">Descripción:</p>
                                                         <textarea rows="2" class="form-control"
                                                             readonly>{{PRODUCTO_DESCRIPCION}}</textarea>
@@ -203,6 +210,7 @@
 
                             {{!-- --}}
 
+                            <input type="hidden" id="productsLength" class="form-control" value="{{numProducts}}">
                             {{#if products}}
                             <div class="rounded-pill clearfix"
                                 style="border: 1px dotted #888; text-align:center; center{margin:16px 0;">
@@ -218,22 +226,25 @@
                                         <h3 class="card-title text-uppercase text-center">
                                             {{PRODUCTO_NOMBRE}}
                                         </h3>
-                                        <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px" height="150px">
+                                        <img id="previewProduct{{@index}}" src="" class="card-img-top" width="90px"
+                                            height="150px">
+                                        <input type="hidden" id="responseProduct{{@index}}" class="form-control"
+                                            value="{{PRODUCTO_IMAGEN}}">
                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
-                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}</p>
+                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}} ({{PRESENTACION_NOMBRE}})</p>
                                         <p class="m-2">Dirección: {{PARROQUIA}}</p>
 
                                         {{!-- --}}
                                         <!-- Button trigger modal -->
                                         <div class="d-grid gap-3">
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#myModal{{@index}}">
+                                                data-bs-target="#myModalProduct{{@index}}">
                                                 Ver Producto
                                             </button>
                                         </div>
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="myModal{{@index}}" tabindex="-1"
+                                        <div class="modal fade" id="myModalProduct{{@index}}" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
@@ -245,11 +256,16 @@
                                                     </div>
 
                                                     <div class="modal-body">
-                                                        <img src="{{PRODUCTO_URL}}" class="card-img-top"
-                                                            alt="Card image cap">
+                                                        <img id="previewProductModal{{@index}}" src=""
+                                                            class="card-img-top" alt="Card image cap">
+                                                        <input type="hidden" id="responseProductModal{{@index}}"
+                                                            class="form-control" value="{{PRODUCTO_IMAGEN}}">
                                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
-                                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}} ({{PRESENTACION_NOMBRE}}) de {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p>
-                                                        {{!-- <p class="m-2">Peso: {{PRODUCTO_MEDIDA}} ({{MEDIDA_NOMBRE}})</p> --}}
+                                                        <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}
+                                                            ({{PRESENTACION_NOMBRE}}) de {{PRODUCTO_MEDIDA}}
+                                                            ({{MEDIDA_NOMBRE}})</p>
+                                                        {{!-- <p class="m-2">Peso: {{PRODUCTO_MEDIDA}}
+                                                            ({{MEDIDA_NOMBRE}})</p> --}}
                                                         <p class="m-2">Descripción:</p>
                                                         <textarea rows="2" class="form-control"
                                                             readonly>{{PRODUCTO_DESCRIPCION}}</textarea>
@@ -374,5 +390,79 @@
             }
 
         });
+
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    var contentType = 'image/png';
+
+    //Cargar Imagen Oferta
+    var offerLength = document.getElementById('offerLength');
+    var b64DataOffer = [];
+    var blobUrlOffer = [];
+
+    for (var i = 0; i < offerLength.value; i++) {
+        b64DataOffer[i] = document.getElementById('responseOffer' + i).value;
+        var blobOffer = b64toBlob(b64DataOffer[i], contentType);
+        blobUrlOffer[i] = URL.createObjectURL(blobOffer);
+
+        var previewOffer = document.getElementById('previewOffer' + i);
+        previewOffer.src = blobUrlOffer[i];
+    }
+
+    //Cargar Imagen Oferta Modal
+    for (var i = 0; i < offerLength.value; i++) {
+        b64DataOffer[i] = document.getElementById('responseOfferModal' + i).value;
+        var blobOffer = b64toBlob(b64DataOffer[i], contentType);
+        blobUrlOffer[i] = URL.createObjectURL(blobOffer);
+
+        var previewOfferModal = document.getElementById('previewOfferModal' + i);
+        previewOfferModal.src = blobUrlOffer[i];
+    }
+
+    //Cargar Imagen Productos
+    var productsLength = document.getElementById('productsLength');
+    var b64DataProduct = [];
+    var blobUrlProduct = [];
+
+    for (var i = 0; i < productsLength.value; i++) {
+        b64DataProduct[i] = document.getElementById('responseProduct' + i).value;
+        var blobProduct = b64toBlob(b64DataProduct[i], contentType);
+        blobUrlProduct[i] = URL.createObjectURL(blobProduct);
+
+        var previewProduct = document.getElementById('previewProduct' + i);
+        previewProduct.src = blobUrlProduct[i];
+    }
+
+    //Cargar Imagen Producto Modal
+    for (var i = 0; i < productsLength.value; i++) {
+        b64DataProduct[i] = document.getElementById('responseProductModal' + i).value;
+        var blobProduct = b64toBlob(b64DataProduct[i], contentType);
+        blobUrlProduct[i] = URL.createObjectURL(blobProduct);
+
+        var previewProductModal = document.getElementById('previewProductModal' + i);
+        previewProductModal.src = blobUrlProduct[i];
+    }
 
 </script>

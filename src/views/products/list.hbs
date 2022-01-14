@@ -7,16 +7,15 @@
                     <div class="card-header">
                         <div class="panel-heading text-center">
                             <h3>
-                                <div class="panel-title">Datos Personales</div>
+                                <div class="panel-title">{{profile.PERSONA_NOMBRE}}</div>
                             </h3>
                         </div>
                     </div>
                     <div class="card-body text-secondary">
-                        <img src="{{profile.PERSONA_URL}}" class="img-thumbnail" width="300px">
+                        <img id="previewProfile{{@index}}" src="" class="img-thumbnail" width="300px">
+                        <input type="hidden" id="responseProfile{{@index}}" class="form-control"
+                            value="{{profile.PERSONA_IMAGEN}}">
                         <div class="mb-3">
-                        </div>
-                        <div class="panel-body text-center">
-                            <i class="fal fa-user"> {{profile.PERSONA_NOMBRE}}</i>
                         </div>
                         <div class="mb-3">
                         </div>
@@ -71,6 +70,7 @@
                             </div>
                             {{/if}}
 
+                            <input type="hidden" id="offerLength" class="form-control" value="{{numOffers}}">
                             {{#if offer}}
                             <div class="rounded-pill clearfix"
                                 style="border: 1px dotted #0D6EFD; text-align:center; center{margin:16px 0;">
@@ -86,7 +86,10 @@
                                         <h3 class="card-title text-uppercase text-center">
                                             {{PRODUCTO_NOMBRE}}
                                         </h3>
-                                        <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px" height="150px">
+                                        <img id="previewOffer{{@index}}" src="" class="card-img-top" width="90px"
+                                            height="150px">
+                                        <input type="hidden" id="responseOffer{{@index}}" class="form-control"
+                                            value="{{PRODUCTO_IMAGEN}}">
                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
                                         <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}
                                             ({{PRESENTACION_NOMBRE}})</p>
@@ -109,10 +112,11 @@
 
                             {{!-- --}}
 
+                            <input type="hidden" id="productsLength" class="form-control" value="{{numProducts}}">
                             {{#if products}}
                             <div class="rounded-pill clearfix"
                                 style="border: 1px dotted #0D6EFD; text-align:center; center{margin:16px 0;">
-                                <h5 style="color: #0D6EFD;">Productos Agredados</h5>
+                                <h5 style="color: #0D6EFD;">Productos sin Oferta</h5>
                             </div>
                             <div class="mb-3">
                             </div>
@@ -124,7 +128,10 @@
                                         <h3 class="card-title text-uppercase text-center">
                                             {{PRODUCTO_NOMBRE}}
                                         </h3>
-                                        <img src="{{PRODUCTO_URL}}" class="card-img-top" width="90px" height="150px">
+                                        <img id="previewProduct{{@index}}" src="" class="card-img-top" width="90px"
+                                            height="150px">
+                                        <input type="hidden" id="responseProduct{{@index}}" class="form-control"
+                                            value="{{PRODUCTO_IMAGEN}}">
                                         <p class="m-2">Precio: $ {{PRODUCTO_PRECIO}}</p>
                                         <p class="m-2">Cantidad Disponible: {{PRODUCTO_CANTIDAD}}
                                             ({{PRESENTACION_NOMBRE}})</p>
@@ -148,3 +155,70 @@
         </div>
     </div>
 </div>
+
+<script>
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    var contentType = 'image/png';
+
+    // Cargar Imagen Perfil
+    var responseProfile = document.getElementById('responseProfile');
+    var b64DataProfile = responseProfile.value;
+
+    var blobProfile = b64toBlob(b64DataProfile, contentType);
+    var blobUrlProfile = URL.createObjectURL(blobProfile);
+
+    var previewProfile = document.getElementById('previewProfile');
+    previewProfile.src = blobUrlProfile;
+
+    //Cargar Imagen Oferta
+    var offerLength = document.getElementById('offerLength');
+    var b64DataOffer = [];
+    var blobUrlOffer = [];
+
+    for (var i = 0; i < offerLength.value; i++) {
+        b64DataOffer[i] = document.getElementById('responseOffer' + i).value;
+        var blobOffer = b64toBlob(b64DataOffer[i], contentType);
+        blobUrlOffer[i] = URL.createObjectURL(blobOffer);
+
+        var previewOffer = document.getElementById('previewOffer' + i);
+        previewOffer.src = blobUrlOffer[i];
+    }
+
+    //Cargar Imagen Productos
+    var productsLength = document.getElementById('productsLength');
+    var b64DataProduct = [];
+    var blobUrlProduct = [];
+
+    for (var i = 0; i < productsLength.value; i++) {
+        b64DataProduct[i] = document.getElementById('responseProduct' + i).value;
+        var blobProduct = b64toBlob(b64DataProduct[i], contentType);
+        blobUrlProduct[i] = URL.createObjectURL(blobProduct);
+
+        var previewProduct = document.getElementById('previewProduct' + i);
+        previewProduct.src = blobUrlProduct[i];
+    }
+
+</script>

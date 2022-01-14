@@ -1,14 +1,9 @@
-const fs = require('fs-extra');
+const fsExtra = require('fs-extra');
+var fs = require('fs');
 var md5 = require('md5');
 
 const pool = require('../database');
-
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
+const Predefined = require('../models/predefined');
 
 module.exports = {
 
@@ -31,7 +26,11 @@ module.exports = {
             addProducts = true;
         }
 
-        res.render('products/list', { products, offer, profile: people[0], admin, addProducts });
+        const numProducts = products.length;
+        const numOffers = offer.length;
+
+        res.render('products/list', { products, offer, profile: people[0], admin, addProducts, numProducts, numOffers });
+
     },
 
     createProductPage: async (req, res) => {
@@ -43,12 +42,12 @@ module.exports = {
     },
 
     createProductPost: async (req, res, cb) => {
-        console.log(req.body);
+        // console.log(req.body);
 
         var today = new Date();
         const productDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
-        const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID, PRODUCTO_NOMBRE, PRODUCTO_DESCRIPCION, OFERTA_DESCRIPCION, PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, PRODUCTO_FECHAPUBLICACION, PRODUCTO_FECHALIMITE, PRODUCTO_FECHACOCECHA, PRODUCTO_ESTADO, PRODUCTO_IMAGEN, PRODUCTO_URL } = req.body;
+        const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID, PRODUCTO_NOMBRE, PRODUCTO_DESCRIPCION, OFERTA_DESCRIPCION, PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, PRODUCTO_FECHAPUBLICACION, PRODUCTO_FECHALIMITE, PRODUCTO_FECHACOCECHA, PRODUCTO_ESTADO, PRODUCTO_IMAGEN } = req.body;
 
         const newProduct = {
             PERSONA_ID: req.user.PERSONA_ID,
@@ -64,8 +63,7 @@ module.exports = {
             PRODUCTO_FECHALIMITE,
             PRODUCTO_FECHACOCECHA,
             PRODUCTO_ESTADO,
-            PRODUCTO_IMAGEN,
-            PRODUCTO_URL
+            PRODUCTO_IMAGEN
         };
 
         const findName = await pool.query('SELECT PRODUCTO_NOMBRE FROM PRODUCTO, PERSONA WHERE PRODUCTO_ESTADO = "ACTIVO" AND PRODUCTO.PERSONA_ID = PERSONA.PERSONA_ID AND PRODUCTO.PRODUCTO_NOMBRE = ? AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA) AND PERSONA.PERSONA_ID = ?', [PRODUCTO_NOMBRE, req.user.PERSONA_ID]);
@@ -84,49 +82,37 @@ module.exports = {
 
         try {
             if (req.file.path) {
-                const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
-                newProduct.PRODUCTO_IMAGEN = cloudImage.public_id;
-                newProduct.PRODUCTO_URL = cloudImage.secure_url;
-                await fs.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
+                let buff = fs.readFileSync(req.file.path);
+                let base64data = buff.toString('base64');
+                newProduct.PRODUCTO_IMAGEN = base64data;
+                await fsExtra.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
             }
         } catch {
-            const cloudImage = [];
-            cloudImage.public_id = 'product_iqxawz.jpg';
-            cloudImage.secure_url = 'https://res.cloudinary.com/drwpai0vu/image/upload/v1617070591/product_iqxawz.jpg';
-            newProduct.PRODUCTO_IMAGEN = cloudImage.public_id;
-            newProduct.PRODUCTO_URL = cloudImage.secure_url;
+            const productsPredefined = Predefined.getPorduct();
+            newProduct.PRODUCTO_IMAGEN = productsPredefined;
         }
 
-        // try {
-        //     if (req.file.filename) {
-        //         newProduct.PRODUCTO_IMAGEN = await req.file.filename;
-        //         newProduct.PRODUCTO_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
-        //     }
-        // } catch {
-        //     newProduct.PRODUCTO_IMAGEN = 'product.jpg';
-        //     newProduct.PRODUCTO_URL = 'http://localhost:3000/img/uploads/product.jpg';
-        // }
+        try {
+            await pool.query('INSERT INTO PRODUCTO set ?', [newProduct]);//await le dice a la funcion que esta peticion va a tomar su tiempo
+        } catch (error) {
+            return cb(new Error('Error al ingresar nuevo producto'));
+        }
 
-        console.log(newProduct);//Muestra datos del formulario
-        console.log(req.file);
-
-        await pool.query('INSERT INTO PRODUCTO set ?', [newProduct]);//await le dice a la funcion que esta peticion va a tomar su tiempo
-
-        console.log('OFERTA_DESCRIPCION: ' + OFERTA_DESCRIPCION);
+        // console.log('OFERTA_DESCRIPCION: ' + OFERTA_DESCRIPCION);
 
         if (OFERTA_DESCRIPCION) {
-            console.log('id user: ' + req.user.PERSONA_ID);
+            // console.log('id user: ' + req.user.PERSONA_ID);
             const row = await pool.query('SELECT MAX(PRODUCTO_ID) AS ID FROM PRODUCTO, PERSONA WHERE PRODUCTO.PERSONA_ID = PERSONA.PERSONA_ID AND PERSONA.PERSONA_ID = ?', [req.user.PERSONA_ID]);
             const lastId = row[0];
             const lastProduct = lastId.ID;
-            console.log('id last product: ' + lastProduct);
+            // console.log('id last product: ' + lastProduct);
             const newOfert = {
                 PRODUCTO_ID: lastProduct,
                 OFERTA_DESCRIPCION
             };
 
             newOfert.OFERTA_DESCRIPCION = newOfert.OFERTA_DESCRIPCION.toUpperCase();
-            console.log(newOfert);
+            // console.log(newOfert);
             await pool.query('INSERT INTO OFERTA set ?', [newOfert]);
         }
 
@@ -143,7 +129,7 @@ module.exports = {
 
     deleteOffert: async (req, res) => {
         const { producto_id } = req.params;
-        console.log('ID producto oferta: ' + producto_id);
+        // console.log('ID producto oferta: ' + producto_id);
         await pool.query('DELETE FROM OFERTA WHERE PRODUCTO_ID = ?', [producto_id]);
         req.flash('success', 'Producto En Oferta Eliminado');
         res.redirect('/products');//redireccionamos a la misma lista products
@@ -170,13 +156,13 @@ module.exports = {
         res.render('products/edit', { product: products[0], productId: productsId[0], category, listcategory, listpresentation, listmeasure, fechaCosecha, fechaLimite });
     },
 
-    editProductPost: async (req, res) => {
+    editProductPost: async (req, res, cb) => {
         const { producto_id } = req.params;
 
         const rows = await pool.query('SELECT * FROM PRODUCTO WHERE PRODUCTO_ID = ?', [producto_id]);
         const products = rows[0];
 
-        const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID, PRODUCTO_NOMBRE, PRODUCTO_DESCRIPCION, OFERTA_DESCRIPCION, PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, PRODUCTO_FECHAPUBLICACION, PRODUCTO_FECHALIMITE, PRODUCTO_FECHACOCECHA, PRODUCTO_ESTADO, PRODUCTO_IMAGEN, PRODUCTO_URL } = req.body;
+        const { CATEGORIA_ID, PRESENTACION_ID, MEDIDA_ID, PRODUCTO_NOMBRE, PRODUCTO_DESCRIPCION, OFERTA_DESCRIPCION, PRODUCTO_CANTIDAD, PRODUCTO_PRECIO, PRODUCTO_MEDIDA, PRODUCTO_FECHAPUBLICACION, PRODUCTO_FECHALIMITE, PRODUCTO_FECHACOCECHA, PRODUCTO_ESTADO, PRODUCTO_IMAGEN } = req.body;
 
         const newProduct = {
             CATEGORIA_ID,
@@ -191,67 +177,52 @@ module.exports = {
             PRODUCTO_FECHALIMITE,
             PRODUCTO_FECHACOCECHA,
             PRODUCTO_ESTADO,
-            PRODUCTO_IMAGEN,
-            PRODUCTO_URL
+            PRODUCTO_IMAGEN
         };
 
-        console.log(newProduct);
+        // console.log(newProduct);
         newProduct.PRODUCTO_NOMBRE = newProduct.PRODUCTO_NOMBRE.toUpperCase();
         newProduct.PRODUCTO_DESCRIPCION = newProduct.PRODUCTO_DESCRIPCION.toUpperCase();
 
         try {
             if (req.file.path) {
-                console.log('Imagen actual');
-                const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
-                newProduct.PRODUCTO_IMAGEN = cloudImage.public_id;
-                newProduct.PRODUCTO_URL = cloudImage.secure_url;
-                await fs.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
+                let buff = fs.readFileSync(req.file.path);
+                let base64data = buff.toString('base64');
+                newProduct.PRODUCTO_IMAGEN = base64data;
+                await fsExtra.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
             }
         } catch {
             newProduct.PRODUCTO_IMAGEN = products.PRODUCTO_IMAGEN;
-            newProduct.PRODUCTO_URL = products.PRODUCTO_URL;
         }
-
-        // try {
-        //     if (req.file.filename) {
-        //         // await fs.unlink(products.PRODUCTO_URL);
-        //         newProduct.PRODUCTO_IMAGEN = await req.file.filename;
-        //         newProduct.PRODUCTO_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
-        //     }
-        // } catch {
-        //     newProduct.PRODUCTO_IMAGEN = products.PRODUCTO_IMAGEN;
-        //     newProduct.PRODUCTO_URL = products.PRODUCTO_URL;
-        // }
 
         newProduct.PRODUCTO_ESTADO = products.PRODUCTO_ESTADO;
         newProduct.PRODUCTO_FECHAPUBLICACION = products.PRODUCTO_FECHAPUBLICACION;
 
-        console.log(newProduct);
-
         const find = await pool.query('SELECT * FROM OFERTA WHERE PRODUCTO_ID = ?', [producto_id]);
 
         if (find.length > 0 && OFERTA_DESCRIPCION) {
-            console.log('Hacemos un update');
+            // console.log('Hacemos un update');
             offer = OFERTA_DESCRIPCION.toUpperCase();
             await pool.query('UPDATE OFERTA SET OFERTA_DESCRIPCION = ? WHERE OFERTA.PRODUCTO_ID = ?', [offer, producto_id]);
 
         } else if (find.length == 0 && OFERTA_DESCRIPCION) {
-            console.log('Hacemos un insert');
+            // console.log('Hacemos un insert');
             const newOfert = {
                 PRODUCTO_ID: producto_id,
                 OFERTA_DESCRIPCION
             };
             newOfert.OFERTA_DESCRIPCION = OFERTA_DESCRIPCION.toUpperCase();
-            console.log(newOfert);
+            // console.log(newOfert);
             await pool.query('INSERT INTO OFERTA set ?', [newOfert]);
 
         }
-        // else if (find.length > 0 && !OFERTA_DESCRIPCION) {
-        //     console.log('Hacemos un delete');
-        //     await pool.query('DELETE FROM oferta WHERE PRODUCTO_ID = ?', [producto_id]);
-        // }
 
-        await pool.query('UPDATE PRODUCTO set ? WHERE PRODUCTO_ID = ?', [newProduct, producto_id]);
+        try {
+            await pool.query('UPDATE PRODUCTO set ? WHERE PRODUCTO_ID = ?', [newProduct, producto_id]);
+        } catch (error) {
+            return cb(new Error('Error al actualizar producto'));
+        }
+
         req.flash('success', 'Producto Actualizado');
         res.redirect('/products');
     },
@@ -268,7 +239,7 @@ module.exports = {
         const rows = await pool.query('SELECT * FROM PERSONA WHERE PERSONA_ID = ?', [PERSONA_ID]);
         const profile = rows[0];
 
-        const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_EMAIL, PERSONA_CONTRASENA, CONTRASENA_ANTIGUA, CONTRASENA_NUEVA, REPETIR_CONTRASENA, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN, PERSONA_URL } = req.body;
+        const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_EMAIL, PERSONA_CONTRASENA, CONTRASENA_ANTIGUA, CONTRASENA_NUEVA, REPETIR_CONTRASENA, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN } = req.body;
 
         const newUser = {
             DIRECCION_ID,
@@ -279,11 +250,10 @@ module.exports = {
             PERSONA_CONTRASENA,
             PERSONA_ESTADO,
             PERSONA_LOGIN,
-            PERSONA_IMAGEN,
-            PERSONA_URL,
+            PERSONA_IMAGEN
         }
 
-        console.log(newUser);
+        // console.log(newUser);
 
         if (DIRECCION_ID == 0) {
             newUser.DIRECCION_ID = profile.DIRECCION_ID;
@@ -314,30 +284,25 @@ module.exports = {
 
         try {
             if (req.file.path) {
-                console.log('Imagen actual');
-                const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
-                newUser.PERSONA_IMAGEN = cloudImage.public_id;
-                newUser.PERSONA_URL = cloudImage.secure_url;
-                await fs.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
+                console.log('bASE 64');
+                let buff = fs.readFileSync(req.file.path);
+                let base64data = buff.toString('base64');
+                newUser.PERSONA_IMAGEN = base64data;
+                await fsExtra.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
             }
         } catch {
-            newUser.PERSONA_IMAGEN = profile.PERSONA_IMAGEN;
-            newUser.PERSONA_URL = profile.PERSONA_URL;
+            newUser.PERSONA_IMAGEN = newUser.PERSONA_IMAGEN;
         }
 
-        // try {
-        //     if (req.file.filename) {
-        //         // await fs.unlink(newUser.PERSONA_URL);
-        //         newUser.PERSONA_IMAGEN = await req.file.filename;
-        //         newUser.PERSONA_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
-        //     }
-        // } catch {
-        //     newUser.PERSONA_IMAGEN = profile.PERSONA_IMAGEN;
-        //     newUser.PERSONA_URL = profile.PERSONA_URL;
-        // }
+        // console.log('Tamaño de la imagen');
+        // console.log(req.file.size);
 
-        console.log(newUser);
-        await pool.query('UPDATE PERSONA set ? WHERE PERSONA_ID = ?', [newUser, PERSONA_ID]);
+        try {
+            await pool.query('UPDATE PERSONA set ? WHERE PERSONA_ID = ?', [newUser, PERSONA_ID]);
+        } catch (error) {
+            return cb(new Error('Error al actualizar la información'));
+        }
+
         req.flash('success', 'Usuario Modificado');
         res.redirect('/products');
     }

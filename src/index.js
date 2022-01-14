@@ -46,8 +46,7 @@ app.use(passport.session());
 
 // Agregar imagenes
 const storage = multer.diskStorage({
-    destination: path.join(__dirname, 'public/img/uploads'),
-    // destination: path.join('public/images/upload'),
+    destination: path.join(__dirname, 'public/img'),
     filename: (req, file, cb, filename) => {
         cb(null, uuidv4() + path.extname(file.originalname));
     }
@@ -56,8 +55,8 @@ const storage = multer.diskStorage({
 app.use(multer({
     storage,
     fileFilter: (req, file, cb) => {
-        if (file.size > 2000000) {//Tamaño maximo del archivo
-            return cb(new Error('Peso maximo de la imagen es de 2 MB'));
+        if (file.size > 700000) { // Tamaño maximo del archivo(7 Kb)
+            return cb(new Error('El peso maximo de la imagen es muy grande, por favor cambie de imagen'));
         } else if (file.mimetype !== "image/png" && file.mimetype !== "image/jpg" && file.mimetype !== "image/jpeg") {
             return cb(new Error('El archivo debe ser una imagen valida'));
         } else {

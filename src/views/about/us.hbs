@@ -1,13 +1,16 @@
 <div class="container p-4">
     <div class="row">
 
+        <input type="hidden" id="infoLength" class="form-control" value="{{numInfo}}">
         {{#each information}}
         <div class="col-md-3">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body text-center">
-                    <a href="{{INFORMACION_URL}}" target="_blank" data-bs-toggle="modal"
+                    <a href="{{INFORMACION_IMAGEN}}" target="_blank" data-bs-toggle="modal"
                         data-bs-target="#myModal{{@index}}">
-                        <img src="{{INFORMACION_URL}}" class="card-img-top" width="90px" height="350px">
+                        <img id="previewInfo{{@index}}" src="" class="card-img-top" width="90px" height="350px">
+                        <input type="hidden" id="responseInfo{{@index}}" class="form-control"
+                            value="{{INFORMACION_IMAGEN}}">
                     </a>
                     <p class="m-2" style="color: #FFC107;">{{INFORMACION_NOMBRE}}</p>
                     <p class="m-2">{{INFORMACION_CARGO}}</p>
@@ -26,10 +29,10 @@
                             </div>
 
                             <div class="modal-body">
-                                <a href="{{INFORMACION_URL}}" target="_blank">
-                                    <img src="{{INFORMACION_URL}}" class="card-img-top" alt="Card image cap"
-                                        width="100px" height="400px">
-                                </a>
+                                <img id="previewInfoModal{{@index}}" src="" class="card-img-top" alt="Card image cap"
+                                    width="50px" height="500px">
+                                <input type="hidden" id="responseInfoModal{{@index}}" class="form-control"
+                                    value="{{INFORMACION_IMAGEN}}">
                                 <p class="m-2 text-center" style="color: #FFC107;">{{INFORMACION_NOMBRE}}</p>
                                 <p class="m-2 text-center">{{INFORMACION_CARGO}}</p>
                                 <p class="m-2" style='text-align: justify;'>{{INFORMACION_DESCRIPCION}}</p>
@@ -55,3 +58,55 @@
 
     </div>
 </div>
+
+<script>
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    var contentType = 'image/png';
+
+    //Cargar Imagen Nosotros
+    var infoLength = document.getElementById('infoLength');
+    var b64DataInfo = [];
+    var blobUrlInfo = [];
+
+    for (var i = 0; i < infoLength.value; i++) {
+        b64DataInfo[i] = document.getElementById('responseInfo' + i).value;
+        var blobInfo = b64toBlob(b64DataInfo[i], contentType);
+        blobUrlInfo[i] = URL.createObjectURL(blobInfo);
+
+        var previewInfo = document.getElementById('previewInfo' + i);
+        previewInfo.src = blobUrlInfo[i];
+    }
+
+    //Cargar Imagen Oferta Modal
+    for (var i = 0; i < infoLength.value; i++) {
+        b64DataInfo[i] = document.getElementById('responseInfoModal' + i).value;
+        var blobInfo = b64toBlob(b64DataInfo[i], contentType);
+        blobUrlInfo[i] = URL.createObjectURL(blobInfo);
+
+        var previewInfoModal = document.getElementById('previewInfoModal' + i);
+        previewInfoModal.src = blobUrlInfo[i];
+    }
+</script>

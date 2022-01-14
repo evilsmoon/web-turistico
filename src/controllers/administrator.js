@@ -1,32 +1,34 @@
+const fsExtra = require('fs-extra');
+var fs = require('fs');
+
 const pool = require('../database');
-
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
-const fs = require('fs-extra');
 
 module.exports = {
 
-    getDeleteUsers: async (req, res) => { //Obtenemos todos los usuarios inactivos
-        const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA_ESTADO = "ELIMINADO"');
-        res.render('administrator/users', { persona });
+    activeUserGet: async (req, res) => { //Obtenemos todos los usuarios inactivos
+        var noUser = false;
+        res.render('administrator/users', { noUser });
     },
 
-    searchDeleteUsers: async (req, res) => { //Buscar usuarios por su nombre
+    activeUserSearch: async (req, res) => { //Buscar usuarios por su nombre
         const { buscar } = req.query;
+        var noUser = false;
+
         if (buscar) {
-            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID AND PERSONA_ESTADO = "ELIMINADO" AND PERSONA_NOMBRE =  ?', [buscar]);
-            res.render('administrator/users', { persona });
+            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA_ESTADO = "ELIMINADO" AND PERSONA_NOMBRE =  ?', [buscar]);
+
+            if (persona.length == 0) {
+                noUser = true;
+            }
+
+            res.render('administrator/users', { persona, noUser });
         } else {
-            res.render('administrator/users');
+            noUser = true;
+            res.render('administrator/users', { noUser });
         }
     },
 
-    activeUser: async (req, res) => { //Activamos usuario por su ID
+    activeUserPost: async (req, res) => { //Activamos usuario por su ID
         const { id } = req.params;
         console.log('id usuario: ' + id);
         var today = new Date();
@@ -35,33 +37,84 @@ module.exports = {
         const userLogin = loginDate + ' ' + loginHour;
 
         await pool.query('UPDATE PERSONA SET PERSONA_ESTADO = "ACTIVO", PERSONA_LOGIN = ? WHERE PERSONA.PERSONA_ID = ?', [userLogin, id]);
-        req.flash('success', 'Usuario Activado');
+
+        const rows = await pool.query('SELECT * FROM PERSONA WHERE PERSONA_ID = ?', [id]);
+        const user = rows[0];
+
+        req.flash('success', 'La cuenta del usuario ' + user.PERSONA_NOMBRE + ' está activado');
         res.redirect('/administrator/users');
     },
 
     // ------------------------------------------------------------------------------------------------------
+    // DAR PERMISOS DE ADMINISTRADOR
     // ------------------------------------------------------------------------------------------------------
-    getAllUsers: async (req, res) => { //Obtenemos pagina de admin
-        res.render('administrator/addAdmin');
+    activeAdminGet: async (req, res) => { //Obtenemos pagina de admin
+        var noUser = false;
+        res.render('administrator/addAdmin', { noUser });
     },
 
-    getSearchUsers: async (req, res) => { //Buscar usuarios por su nombre
+    activeAdminSearch: async (req, res) => { //Buscar usuarios por su nombre
         const { buscar } = req.query;
+        var noUser = false;
+
         if (buscar) {
-            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION, ROL WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = ROL.ROL_ID AND PERSONA_ESTADO = "ACTIVO" AND PERSONA_NOMBRE =  ?', [buscar]);
-            res.render('administrator/addAdmin', { persona });
+            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA.ROL_ID = 2 AND PERSONA_ESTADO = "ACTIVO" AND PERSONA_NOMBRE =  ?', [buscar]);
+
+            if (persona.length == 0) {
+                noUser = true;
+            }
+
+            res.render('administrator/addAdmin', { persona, noUser });
         } else {
-            res.render('administrator/addAdmin');
+            noUser = true;
+            res.render('administrator/addAdmin', { persona, noUser });
         }
     },
 
-    activeAdmin: async (req, res) => { //Activamos usuario por su ID
+    activeAdminPost: async (req, res) => { //Activamos usuario por su ID
         const { id } = req.params;
         await pool.query('UPDATE PERSONA SET ROL_ID = 1 WHERE PERSONA.PERSONA_ID = ?', [id]);
         const rows = await pool.query('SELECT PERSONA_NOMBRE FROM PERSONA WHERE PERSONA_ID = ?', [id]);
         const persona = rows[0].PERSONA_NOMBRE;
-        req.flash('success', 'El usuario ' + persona +' ahora posee permisos de administrador');
+        req.flash('success', 'El usuario ' + persona + ' ahora posee permisos de administrador');
         res.redirect('/administrator/addAdmin');
+    },
+    // ------------------------------------------------------------------------------------------------------
+    // ELIMINAR USUARIO
+    // ------------------------------------------------------------------------------------------------------
+    deleteUserGet: async (req, res) => { //Obtenemos pagina de admin
+        var noUser = false;
+        res.render('administrator/deleteUser', { noUser });
+    },
+
+    deleteUserSearch: async (req, res) => { //Buscar usuarios por su nombre
+        const { buscar } = req.query;
+        var noUser = false;
+
+        if (buscar) {
+            const persona = await pool.query('SELECT * FROM PERSONA, DIRECCION WHERE PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PERSONA_ESTADO = "ACTIVO" AND PERSONA_NOMBRE =  ?', [buscar]);
+
+            if (persona.length == 0) {
+                noUser = true;
+            }
+
+            res.render('administrator/deleteUser', { persona, noUser });
+        } else {
+            noUser = true;
+            res.render('administrator/deleteUser', { persona, noUser });
+        }
+    },
+
+    deleteUserPost: async (req, res) => { //Activamos usuario por su ID
+        const { id } = req.params;
+        console.log(id);
+        await pool.query('UPDATE PERSONA SET PERSONA_ESTADO = "ELIMINADO" WHERE PERSONA.PERSONA_ID = ?', [id]);
+        await pool.query('UPDATE PRODUCTO SET PRODUCTO_ESTADO = "ELIMINADO" WHERE PRODUCTO.PERSONA_ID = ?', [id]);
+        // UPDATE `producto` SET `PRODUCTO_ESTADO` = 'ELIMINADO' WHERE `producto`.`PRODUCTO_ID` = 2;
+        const rows = await pool.query('SELECT PERSONA_NOMBRE FROM PERSONA WHERE PERSONA_ID = ?', [id]);
+        const persona = rows[0].PERSONA_NOMBRE;
+        req.flash('success', 'El usuario ' + persona + ' ahora se encuntra eliminado');
+        res.redirect('/administrator/addUser');
     },
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
@@ -81,7 +134,11 @@ module.exports = {
         newCategory.CATEGORIA_NOMBRE = newCategory.CATEGORIA_NOMBRE.toUpperCase();
         newCategory.CATEGORIA_DESCRIPCION = newCategory.CATEGORIA_DESCRIPCION.toUpperCase();
         newCategory.CATEGORIA_ESTADO = 'ACTIVO';
-        await pool.query('INSERT INTO CATEGORIA set ?', [newCategory]);
+        try {
+            await pool.query('INSERT INTO CATEGORIA set ?', [newCategory]);
+        } catch (error) {
+            return cb(new Error('Error al agregar una nueva categoria'));
+        }
         res.redirect('/administrator/category');
     },
 
@@ -104,7 +161,11 @@ module.exports = {
         }
         newMeasurement.MEDIDA_NOMBRE = newMeasurement.MEDIDA_NOMBRE.toUpperCase();
         newMeasurement.MEDIDA_ESTADO = 'ACTIVO';
-        await pool.query('INSERT INTO MEDIDA set ?', [newMeasurement]);
+        try {
+            await pool.query('INSERT INTO MEDIDA set ?', [newMeasurement]);
+        } catch (error) {
+            return cb(new Error('Error al agregar una nueva medida'));
+        }
         res.redirect('/administrator/measurements');
     },
 
@@ -127,7 +188,11 @@ module.exports = {
         }
         newPresentation.PRESENTACION_NOMBRE = newPresentation.PRESENTACION_NOMBRE.toUpperCase();
         newPresentation.PRESENTACION_ESTADO = 'ACTIVO';
-        await pool.query('INSERT INTO PRESENTACION set ?', [newPresentation]);
+        try {
+            await pool.query('INSERT INTO PRESENTACION set ?', [newPresentation]);
+        } catch (error) {
+            return cb(new Error('Error al agregar una nueva presentación'));
+        }
         res.redirect('/administrator/presentation');
     },
 
@@ -137,43 +202,44 @@ module.exports = {
         res.redirect('/administrator/presentation');
     },
 
-    getAllInformation: async (req, res) => { //Obtenemos todas las unidades de medida
+    getAllInformation: async (req, res) => { //Obtenemos toda la información relacionada a los colaboradores
         const information = await pool.query('SELECT * FROM INFORMACION WHERE INFORMACION_ESTADO = "ACTIVO"');
         res.render('administrator/information', { information });
     },
 
     createInformationPost: async (req, res, cb) => { //Agremamos nueva presentacion
-        const { INFORMACION_NOMBRE, INFORMACION_CARGO, INFORMACION_DESCRIPCION, INFORMACION_IMAGEN, INFORMACION_URL, INFORMACION_ESTADO } = req.body;
+        const { INFORMACION_NOMBRE, INFORMACION_CARGO, INFORMACION_DESCRIPCION, INFORMACION_IMAGEN, INFORMACION_ESTADO } = req.body;
         const newInfomation = {
             INFORMACION_NOMBRE,
             INFORMACION_CARGO,
             INFORMACION_DESCRIPCION,
             INFORMACION_IMAGEN,
-            INFORMACION_URL,
             INFORMACION_ESTADO
         }
 
+        console.log(newInfomation);
+
         try {
-            const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
-            newInfomation.INFORMACION_IMAGEN = cloudImage.public_id;
-            newInfomation.INFORMACION_URL = cloudImage.secure_url;
-            await fs.unlink(req.file.path);
+            if (req.file.path) {
+                let buff = fs.readFileSync(req.file.path);
+                let base64data = buff.toString('base64');
+                newInfomation.INFORMACION_IMAGEN = base64data;
+                await fsExtra.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
+            }
         } catch (error) {
             return cb(new Error('Agregue una imagen'));
         }
 
-        // newInfomation.INFORMACION_IMAGEN = await req.file.filename;
-        // newInfomation.INFORMACION_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
-
         newInfomation.INFORMACION_ESTADO = 'ACTIVO';
 
-        console.log(newInfomation);
+        // console.log(newInfomation);
         try {
             await pool.query('INSERT INTO INFORMACION set ?', [newInfomation]);
         } catch (error) {
-            return cb(new Error('Error al ingresar información'));
+            return cb(new Error('Error al crear nuevo colaborador'));
         }
 
+        req.flash('success', 'Información agregada con exito');
         res.redirect('/administrator/information');
     },
 

@@ -6,12 +6,15 @@ const pool = require('../database');
 const { isAdmin } = require('../lib/auth');
 
 const {
-    getDeleteUsers,
-    searchDeleteUsers,
-    activeUser,
-    getAllUsers,
-    getSearchUsers,
-    activeAdmin,
+    activeUserGet,
+    activeUserSearch,
+    activeUserPost,
+    activeAdminGet,
+    activeAdminSearch,
+    activeAdminPost,
+    deleteUserGet,
+    deleteUserSearch,
+    deleteUserPost,
     getAllCategory,
     createCategoryPost,
     deleteCategory,
@@ -26,13 +29,17 @@ const {
     deleteInformation
 } = require('../controllers/administrator');
 
-router.get('/users', isAdmin, getDeleteUsers); //Obtenemos todos los usuarios inactivos
-router.get('/users/search', isAdmin, searchDeleteUsers); //Buscar usuarios por su nombre
-router.get('/active/:id', isAdmin, activeUser); //Activamos usuario por su ID
+router.get('/users', isAdmin, activeUserGet); //Obtenemos la pagina de usuarios eliminados
+router.get('/users/search', isAdmin, activeUserSearch); //Buscar usuarios por su nombre
+router.get('/active/:id', isAdmin, activeUserPost); //Activamos usuario por su ID
 
-router.get('/addAdmin', isAdmin, getAllUsers); //Obtenemos la pagina de admin
-router.get('/addAdmin/search', isAdmin, getSearchUsers); //Buscar usuarios por su nombre
-router.get('/activeAdmin/:id', isAdmin, activeAdmin); //Damos permisos de administrador al usuario
+router.get('/addAdmin', isAdmin, activeAdminGet); //Obtenemos la pagina de admin
+router.get('/addAdmin/search', isAdmin, activeAdminSearch); //Buscar usuarios por su nombre
+router.get('/activeAdmin/:id', isAdmin, activeAdminPost); //Damos permisos de administrador al usuario
+
+router.get('/addUser', isAdmin, deleteUserGet); //Obtenemos la pagina de eliminar usuario
+router.get('/addUser/search', isAdmin, deleteUserSearch); //Buscar usuarios por su nombre
+router.get('/deleteUser/:id', isAdmin, deleteUserPost); //Eliminamos usuario de la aplicacion web
 
 router.get('/category', isAdmin, getAllCategory); //Obtenemos todas los categorias
 router.post('/category', isAdmin, createCategoryPost); //Agregamos nueva categoria

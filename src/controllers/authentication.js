@@ -1,21 +1,16 @@
-const fs = require('fs-extra');
+const fsExtra = require('fs-extra');
+var fs = require('fs');
 var md5 = require('md5');
 
 const pool = require('../database');
+const Predefined = require('../models/predefined');
 
 const { getToken, getTokenData } = require('../lib/jwt.config');
 const { getTemplate, sendEmail } = require('../lib/mail');
 
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
 module.exports = {
 
-    createUserPage: async (req, res) => { 
+    createUserPage: async (req, res, cb) => {
         res.render('auth/signup');
     },
 
@@ -27,7 +22,7 @@ module.exports = {
         const loginHour = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
         const userLogin = loginDate + ' ' + loginHour;
 
-        const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_EMAIL, PERSONA_CONTRASENA, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN, PERSONA_URL } = req.body;
+        const { DIRECCION_ID, ROL_ID, PERSONA_NOMBRE, PERSONA_TELEFONO, PERSONA_EMAIL, PERSONA_CONTRASENA, PERSONA_ESTADO, PERSONA_LOGIN, PERSONA_IMAGEN } = req.body;
         const rows = await pool.query('SELECT * FROM PERSONA WHERE PERSONA_EMAIL = ?', [PERSONA_EMAIL]);
 
         if (rows.length > 0) {
@@ -42,8 +37,7 @@ module.exports = {
                 PERSONA_CONTRASENA,
                 PERSONA_ESTADO,
                 PERSONA_LOGIN,
-                PERSONA_IMAGEN,
-                PERSONA_URL,
+                PERSONA_IMAGEN
             }
 
             newUser.ROL_ID = 2;
@@ -54,39 +48,30 @@ module.exports = {
 
             try {
                 if (req.file.path) {
-                    const cloudImage = await cloudinary.uploader.upload(req.file.path); //Permite guardar las imagenes en cloudinary
-                    newUser.PERSONA_IMAGEN = cloudImage.public_id;
-                    newUser.PERSONA_URL = cloudImage.secure_url;
-                    await fs.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
+                    let buff = fs.readFileSync(req.file.path);
+                    let base64data = buff.toString('base64');
+                    newUser.PERSONA_IMAGEN = base64data;
+                    await fsExtra.unlink(req.file.path); //Elimina las imagenes, para que no guarden de manera local
                 }
             } catch {
-                const cloudImage = [];
-                cloudImage.public_id = 'user_cd82yj.png';
-                cloudImage.secure_url = 'https://res.cloudinary.com/drwpai0vu/image/upload/v1617070591/user_cd82yj.png';
-                newUser.PERSONA_IMAGEN = cloudImage.public_id;
-                newUser.PERSONA_URL = cloudImage.secure_url;
+                const userPredefined = Predefined.getUser();
+                newUser.PERSONA_IMAGEN = userPredefined;
             }
 
-            // try {
-            //     if (req.file.filename) {
-            //         newUser.PERSONA_IMAGEN = await req.file.filename;
-            //         newUser.PERSONA_URL = await 'http://localhost:3000/img/uploads/' + req.file.filename;
-            //     }
-            // } catch {
-            //     newUser.PERSONA_IMAGEN = 'product.jpg';
-            //     newUser.PERSONA_URL = 'http://localhost:3000/img/uploads/user.jpg';
-            // }
-
-            console.log(newUser);
-            await pool.query('INSERT INTO PERSONA SET ?', [newUser]);
+            // console.log(newUser);
+            try {
+                await pool.query('INSERT INTO PERSONA SET ?', [newUser]);
+            } catch (error) {
+                return cb(new Error('Error al crear la cuenta'));
+            }
 
             // Validar usuario por correo
             // Generar token
             const token = getToken({ PERSONA_EMAIL, PERSONA_CONTRASENA });
 
             // Obtener un template para el correo
-            // const link = `http://localhost:3000/confirm-email/${token}`;
-            const link = `https://compraventa-cotopaxi.herokuapp.com/confirm-email/${token}`;
+            const link = `http://localhost:3000/confirm-email/${token}`;
+            // const link = `https://compraventa-cotopaxi.herokuapp.com/confirm-email/${token}`;
             const template = getTemplate(PERSONA_NOMBRE, link);
 
             // Enviar el email

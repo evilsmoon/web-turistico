@@ -8,6 +8,14 @@
                         <div class="row">
                             <div class="col-md-2">
                             </div>
+                            <div class="mb-3">
+                            </div>
+                            <div class="rounded-pill clearfix"
+                                style="border: 1px dotted #888; text-align:center; center{margin:16px 0;">
+                                <h5 style="color: #888;">Activar Usuarios</h5>
+                            </div>
+                            <div class="mb-3">
+                            </div>
                             <div class="col-md-8 text-center">
                                 <form class="d-flex" action="/administrator/users/search" method="GET">
                                     <input class="form-control me-2" type="search" name="buscar" id="search"
@@ -17,15 +25,21 @@
                             </div>
                             <div class="mb-3">
                             </div>
-                            <div class="rounded-pill clearfix"
-                                style="border: 1px dotted #888; text-align:center; center{margin:16px 0;">
-                                <h5 style="color: #888;">Personas con cuentas desactivadas</h5>
+
+                            {{#if noUser}}
+                            <div class="col-md-4 mx-auto">
+                                <div class="mb-3">
+                                </div>
+                                <div class="card card-body border-danger text-center">
+                                    <p class="text-danger">Usuario no Encontrado
+                                    </p>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                            </div>
+                            {{/if}}
+
                             {{#if persona}}
                             <table class="table caption-top">
-                                <caption>Lista de Usuarios Eliminados</caption>
+                                <caption>Datos del Usuario Eliminado</caption>
                                 <thead class="text-center table-dark">
                                     <tr class="card-title text-uppercase">
                                         <td>Nombre</td>
@@ -51,17 +65,6 @@
                                 </tbody>
                             </table>
                             {{else}}
-                            <div class="col-md-4 mx-auto">
-                                <div class="mb-3">
-                                </div>
-                                <div class="card card-body text-center">
-                                    <p>Usuario no Encontrado
-                                        <a href="/administrator/users" class="btn btn-primary">
-                                            Regresar
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
                             {{/if}}
                         </div>
                     </div>
@@ -80,6 +83,9 @@
                 <div class="d-grid gap-3">
                     <a href="/administrator/addAdmin" class="btn btn-outline-secondary">
                         <i class="fal fa-check-circle"> Agregar Administrador</i>
+                    </a>
+                    <a href="/administrator/addUser" class="btn btn-outline-danger">
+                        <i class="fal fa-times-circle"> Eliminar Usuarios</i>
                     </a>
                     <a href="/administrator/category" class="btn btn-outline-success">
                         <i class="fal fa-list"> Categorias</i>

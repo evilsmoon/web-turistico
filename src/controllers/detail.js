@@ -9,7 +9,7 @@ module.exports = {
         const detail = await pool.query('SELECT * FROM VENTA WHERE PERSONA_ID = ? ORDER BY VENTA.VENTA_ID DESC', [userId]);
         const lastSell = detail[0];
         console.log(lastSell);
-        res.render('detail/buy', { detail , lastSell});
+        res.render('detail/buy', { detail, lastSell });
     },
 
     getDetailBuy: async (req, res) => {
@@ -119,7 +119,7 @@ module.exports = {
 
             .fontSize(10)
             .font("Helvetica-Bold")
-            .text("Productor", 275, invoiceTableHead + 20)
+            .text("Direccion", 275, invoiceTableHead + 20)
 
             .fontSize(10)
             .font("Helvetica-Bold")
@@ -127,7 +127,7 @@ module.exports = {
 
             .fontSize(10)
             .font("Helvetica-Bold")
-            .text("Direccion", 440, invoiceTableHead + 20)
+            .text("Productor", 440, invoiceTableHead + 20)
 
             .moveDown();
 
@@ -161,7 +161,7 @@ module.exports = {
 
                 .fontSize(10)
                 .font("Helvetica")
-                .text(i.PERSONA_NOMBRE, 275, invoiceTableBody)
+                .text(i.PARROQUIA, 275, invoiceTableBody)
 
                 .fontSize(10)
                 .font("Helvetica")
@@ -169,7 +169,7 @@ module.exports = {
 
                 .fontSize(10)
                 .font("Helvetica")
-                .text(i.PARROQUIA, 440, invoiceTableBody)
+                .text(i.PERSONA_NOMBRE, 440, invoiceTableBody)
 
             doc.strokeColor("#aaaaaa")
                 .lineWidth(1)
@@ -205,8 +205,36 @@ module.exports = {
 
     getAllSell: async (req, res) => {
         const userId = req.user.PERSONA_ID;
+        var noSell = false;
         const detail = await pool.query('SELECT * FROM PERSONA, DETALLE_VENTA, VENTA, PRODUCTO, TIPO_PAGO WHERE VENTA.PERSONA_ID = PERSONA.PERSONA_ID AND VENTA.VENTA_ID = DETALLE_VENTA.VENTA_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND VENTA.PAGO_ID = TIPO_PAGO.PAGO_ID AND DETALLE_VENTA.DETALLE_PRODUCTOR = ? ORDER BY DETALLE_VENTA.DETALLE_ID DESC', [userId]);
-        res.render('detail/sell', { detail });
+
+        if (detail.length == 0) {
+            noSell = true;
+        }
+
+        res.render('detail/sell', { detail, noSell });
+    },
+
+    getSearchSell: async (req, res) => {
+        const userId = req.user.PERSONA_ID;
+        const { buscar } = req.query;
+        var noUser = false;
+
+        console.log(buscar);
+
+        if (buscar) {
+            const detail = await pool.query('SELECT * FROM PERSONA, DETALLE_VENTA, VENTA, PRODUCTO, TIPO_PAGO WHERE VENTA.PERSONA_ID = PERSONA.PERSONA_ID AND VENTA.VENTA_ID = DETALLE_VENTA.VENTA_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND DETALLE_VENTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID AND VENTA.PAGO_ID = TIPO_PAGO.PAGO_ID AND DETALLE_VENTA.DETALLE_PRODUCTOR = ? AND PERSONA.PERSONA_NOMBRE = ? ORDER BY DETALLE_VENTA.DETALLE_ID DESC', [userId, buscar]);
+
+            if (detail.length == 0) {
+                noUser = true;
+            }
+
+            res.render('detail/sell', { detail, noUser });
+        } else {
+            var noUser = true;
+            res.render('detail/sell', { noUser });
+        }
+
     }
 
 }

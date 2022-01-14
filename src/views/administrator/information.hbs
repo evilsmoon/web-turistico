@@ -52,7 +52,7 @@
 
                             <label class="form-label">Descripción:</label>
                             <textarea name="INFORMACION_DESCRIPCION" rows="4" class="form-control"
-                                placeholder="Descripción" maxlength="300"
+                                placeholder="Descripción" maxlength="600"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 required></textarea>
                         </p>
@@ -82,10 +82,13 @@
                 <div class="panel panel-default">
                     <div class="d-grid gap-3">
                         <a href="/administrator/users" class="btn btn-outline-success">
-                            <i class="fal fa-user"> Usuarios</i>
+                            <i class="fal fa-user"> Activar Usuarios</i>
                         </a>
                         <a href="/administrator/addAdmin" class="btn btn-outline-secondary">
                             <i class="fal fa-check-circle"> Agregar Administrador</i>
+                        </a>
+                        <a href="/administrator/addUser" class="btn btn-outline-danger">
+                            <i class="fal fa-times-circle"> Eliminar Usuarios</i>
                         </a>
                         <a href="/administrator/presentation" class="btn btn-outline-primary">
                             <i class="fal fa-sack"> Presentación</i>

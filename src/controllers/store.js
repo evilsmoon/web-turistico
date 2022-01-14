@@ -15,7 +15,10 @@ module.exports = {
                 findProducts = true;
             }
 
-            res.render('store/shop', { products, category, findProducts });
+            const numProducts = products.length;
+            const numOffers = '0';
+
+            res.render('store/shop', { products, category, findProducts, numProducts, numOffers });
         } catch {
             const products = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND PRODUCTO.PRODUCTO_ID NOT IN ( SELECT OFERTA.PRODUCTO_ID FROM OFERTA)');
 
@@ -23,7 +26,10 @@ module.exports = {
                 findProducts = true;
             }
 
-            res.render('store/shop', { products, category, findProducts });
+            const numProducts = products.length;
+            const numOffers = '0';
+
+            res.render('store/shop', { products, category, findProducts, numProducts, numOffers });
         }
     },
 
@@ -43,10 +49,15 @@ module.exports = {
                     findProducts = true;
                 }
 
-                res.render('store/shop', { products, category, offer, findProducts });
+                const numProducts = products.length;
+                const numOffers = offer.length;
+
+                res.render('store/shop', { products, category, offer, findProducts, numProducts, numOffers });
             } else {
                 findProducts = true;
-                res.render('store/shop', { category, findProducts });
+                const numProducts = '0';
+                const numOffers = '0';
+                res.render('store/shop', { category, findProducts, numProducts, numOffers });
             }
         } catch {
             if (buscar) {
@@ -58,10 +69,16 @@ module.exports = {
                     findProducts = true;
                 }
 
-                res.render('store/shop', { products, offer, category, findProducts });
+                const numProducts = products.length;
+                const numOffers = offer.length;
+
+                res.render('store/shop', { products, offer, category, findProducts, numProducts, numOffers });
             } else {
                 findProducts = true;
-                res.render('store/shop', { category, findProducts });
+                const numProducts = '0';
+                const numOffers = '0';
+
+                res.render('store/shop', { category, findProducts, numProducts, numOffers });
             }
         }
     },
@@ -82,10 +99,16 @@ module.exports = {
                     findProducts = true;
                 }
 
-                res.render('store/shop', { products, offer, category, findProducts });
+                const numProducts = products.length;
+                const numOffers = offer.length;
+
+                res.render('store/shop', { products, offer, category, findProducts, numProducts, numOffers });
             } else {
                 findProducts = true;
-                res.render('store/shop', { category, findProducts });
+                const numProducts = '0';
+                const numOffers = '0';
+
+                res.render('store/shop', { category, findProducts, numProducts, numOffers });
             }
         } catch {
             if (DIRECCION_ID !== '0') {
@@ -96,11 +119,16 @@ module.exports = {
                 if (products.length == 0 && offer.length == 0) {
                     findProducts = true;
                 }
+                const numProducts = products.length;
+                const numOffers = offer.length;
 
-                res.render('store/shop', { products, offer, category, findProducts });
+                res.render('store/shop', { products, offer, category, findProducts, numProducts, numOffers });
             } else {
                 findProducts = true;
-                res.render('store/shop', { category, findProducts });
+                const numProducts = '0';
+                const numOffers = '0';
+
+                res.render('store/shop', { category, findProducts, numProducts, numOffers });
             }
         }
 
@@ -121,11 +149,16 @@ module.exports = {
                 if (products.length == 0 && offer.length == 0) {
                     findProducts = true;
                 }
+                const numProducts = products.length;
+                const numOffers = offer.length;
 
-                res.render('store/shop', { products, offer, category, findProducts });
+                res.render('store/shop', { products, offer, category, findProducts, numProducts, numOffers });
             } else {
                 findProducts = true;
-                res.render('store/shop', { category, findProducts });
+                const numProducts = '0';
+                const numOffers = '0';
+
+                res.render('store/shop', { category, findProducts, numProducts, numOffers });
             }
         } catch {
             if (CATEGORIA_ID) {
@@ -136,11 +169,16 @@ module.exports = {
                 if (products.length == 0 && offer.length == 0) {
                     findProducts = true;
                 }
+                const numProducts = products.length;
+                const numOffers = offer.length;
 
-                res.render('store/shop', { products, offer, category, findProducts });
+                res.render('store/shop', { products, offer, category, findProducts, numProducts, numOffers });
             } else {
                 findProducts = true;
-                res.render('store/shop', { category, findProducts });
+                const numProducts = '0';
+                const numOffers = '0';
+
+                res.render('store/shop', { category, findProducts, numProducts, numOffers });
             }
         }
     },
@@ -157,15 +195,20 @@ module.exports = {
                 findProducts = true;
             }
 
-            res.render('store/offer', { offer, category, findProducts });
+            const numOffers = offer.length;
+            const numProducts = '0';
+
+            res.render('store/offer', { offer, category, findProducts, numProducts, numOffers });
         } catch {
             const offer = await pool.query('SELECT * FROM PRODUCTO, CATEGORIA, PRESENTACION, PERSONA, DIRECCION, MEDIDA, OFERTA WHERE CATEGORIA.CATEGORIA_ID = PRODUCTO.CATEGORIA_ID AND PRESENTACION.PRESENTACION_ID = PRODUCTO.PRESENTACION_ID AND MEDIDA.MEDIDA_ID = PRODUCTO.MEDIDA_ID AND PRODUCTO_ESTADO = "ACTIVO" AND PERSONA.PERSONA_ID = PRODUCTO.PERSONA_ID AND PERSONA.DIRECCION_ID = DIRECCION.DIRECCION_ID AND PRODUCTO.PRODUCTO_CANTIDAD NOT IN (0) AND OFERTA.PRODUCTO_ID = PRODUCTO.PRODUCTO_ID');
 
             if (offer.length == 0) {
                 findProducts = true;
             }
+            const numProducts = '0';
+            const numOffers = offer.length;
 
-            res.render('store/offer', { offer, category, findProducts });
+            res.render('store/offer', { offer, category, findProducts, numProducts, numOffers });
         }
 
     },
@@ -232,7 +275,7 @@ module.exports = {
         res.redirect('/products');
     },
 
-    buyCart: async (req, res) => {
+    buyCart: async (req, res, cb) => {
         const userId = req.user.PERSONA_ID;
         let boolBuy = [];
         var today = new Date();
@@ -282,7 +325,11 @@ module.exports = {
 
             console.log(newSell);
 
-            await pool.query('INSERT INTO VENTA set ?', [newSell]);
+            try {
+                await pool.query('INSERT INTO VENTA set ?', [newSell]);
+            } catch (error) {
+                return cb(new Error('Error al realizar la compra'));
+            }
 
             const row = await pool.query('SELECT MAX(VENTA_ID) AS ID FROM VENTA, PERSONA WHERE VENTA.PERSONA_ID = PERSONA.PERSONA_ID AND PERSONA.PERSONA_ID = ?', [req.user.PERSONA_ID]);
             const lastId = row[0];
@@ -294,6 +341,7 @@ module.exports = {
                     VENTA_ID: lastSell,
                     PRODUCTO_ID: i.PRODUCTO_ID,
                     DETALLE_OFERTA: i.OFERTA_DESCRIPCION,
+                    DETALLE_OFERTA: activado,
                     DETALLE_CANTIDAD: i.PRODUCTO_CANTIDAD,
                     DETALLE_PRECIOUNITARIO: i.PRECIO_UNITARIO,
                     DETALLE_PRECIOTOTAL: i.PRODUCTO_PRECIO,

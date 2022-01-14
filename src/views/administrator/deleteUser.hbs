@@ -11,13 +11,13 @@
                             <div class="mb-3">
                             </div>
                             <div class="rounded-pill clearfix"
-                                style="border: 1px dotted #888; text-align:center; center{margin:16px 0;">
-                                <h5 style="color: #888;">Agregar perfil de Administrador</h5>
+                                style="border: 1px dotted rgb(255, 10, 10); text-align:center; center{margin:16px 0;">
+                                <h5 style="color: rgb(255, 10, 10);">Eliminar Usuarios</h5>
                             </div>
                             <div class="mb-3">
                             </div>
                             <div class="col-md-8 text-center">
-                                <form class="d-flex" action="/administrator/addAdmin/search" method="GET">
+                                <form class="d-flex" action="/administrator/addUser/search" method="GET">
                                     <input class="form-control me-2" type="search" name="buscar" id="search"
                                         placeholder="Buscar Usuario" aria-label="Search">
                                     <button class="btn btn-outline-success " type="submit">Buscar</button>
@@ -57,8 +57,8 @@
                                         <td>{{PARROQUIA}}</td>
                                         <td>{{PERSONA_EMAIL}}</td>
                                         <td>
-                                            <a href="/administrator/activeAdmin/{{PERSONA_ID}}"
-                                                class="btn btn-success">Activar</a>
+                                            <a href="/administrator/deleteUser/{{PERSONA_ID}}"
+                                                class="btn btn-danger">Eliminar</a>
                                         </td>
                                     </tr>
                                     {{/each}}
@@ -82,10 +82,10 @@
             <div class="panel panel-default">
                 <div class="d-grid gap-3">
                     <a href="/administrator/users" class="btn btn-outline-secondary">
-                        <i class="fal fa-user"> Activar Usuarios</i>
+                        <i class="fal fa-user"> Usuarios</i>
                     </a>
-                    <a href="/administrator/addUser" class="btn btn-outline-danger">
-                        <i class="fal fa-times-circle"> Eliminar Usuarios</i>
+                    <a href="/administrator/addAdmin" class="btn btn-outline-secondary">
+                        <i class="fal fa-check-circle"> Agregar Administrador</i>
                     </a>
                     <a href="/administrator/category" class="btn btn-outline-success">
                         <i class="fal fa-list"> Categorias</i>
