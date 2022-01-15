@@ -22,7 +22,7 @@ module.exports = {
     database: {
         host: 'localhost',
         user: 'root',
-        password: '753159862450',
+        password: 'Evils-MySql2020@',
         database: 'ventas'
     }
 }
