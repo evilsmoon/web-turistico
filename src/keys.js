@@ -1,11 +1,12 @@
-// module.exports = {
-//     database: {
-//         host: process.env.DB_HOST,
-//         user: process.env.DB_USERNAME,
-//         password: process.env.DB_PASSWORD,
-//         database: process.env.DB_DATABASE
-//     }
-// }
+module.exports = {
+    database: {
+        host: process.env.DB_HOST,
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
+        port: 3306
+    }
+}
 
 // Base de Datos Jona
 // module.exports = {
@@ -18,11 +19,11 @@
 // }
 
 // local Data Base
-module.exports = {
-    database: {
-        host: 'localhost',
-        user: 'root',
-        password: 'Evils-MySql2020@',
-        database: 'ventas'
-    }
-}
+// module.exports = {
+//     database: {
+//         host: 'localhost',
+//         user: 'root',
+//         password: 'Evils-MySql2020@',
+//         database: 'ventas'
+//     }
+// }
